@@ -1,5 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { getDayOfWeek, getMonthNameByNumber } from '../../utils/calendar';
+import {
+  getDayOfWeek,
+  getMonthNameByNumber,
+  getNameOfWeek,
+} from '../../utils/calendar';
 
 @Component({
   selector: 'app-calendar',
@@ -43,8 +47,13 @@ export class CalendarComponent implements OnInit {
   private initCalendarGrid(): void {
     for (let i = 0; i < this.daysInCurrentMonth; i++) {
       const day: MonthDay = {
-        day: i + 1,
-        name: getDayOfWeek(
+        weekNumber: getDayOfWeek(
+          this.today().getFullYear(),
+          this.today().getMonth() + 1,
+          i + 1
+        ),
+        monthNumber: i + 1,
+        name: getNameOfWeek(
           this.today().getFullYear(),
           this.today().getMonth() + 1,
           i + 1
@@ -61,6 +70,7 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
     this.initMonthDays();
     this.initCalendarGrid();
+    console.log('Days: ', this.monthDays());
   }
 
   getMonthByNumber(monthNumber: number): string {
@@ -69,7 +79,8 @@ export class CalendarComponent implements OnInit {
 }
 
 interface MonthDay {
-  day: number;
+  weekNumber: number;
+  monthNumber: number;
   name: string;
   isToday: boolean;
   completed: boolean;

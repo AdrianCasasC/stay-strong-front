@@ -25,11 +25,21 @@ const WEEK_DAYS = [
 
 export const getMonthNameByNumber = (monthNumber: number): string =>
   MONTH_NAMES[monthNumber] || '';
-export const getDayOfWeek = (
+
+export const getNameOfWeek = (
   year: number,
   month: number,
   day: number
 ): string => {
   const date = new Date(year, month - 1, day);
   return WEEK_DAYS[date.getDay()];
+};
+
+export const getDayOfWeek = (
+  year: number,
+  month: number,
+  day: number
+): number => {
+  const date = new Date(year, month - 1, day);
+  return date.getDay() !== 0 ? date.getDay() : 7;
 };

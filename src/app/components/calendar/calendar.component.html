@@ -1,5 +1,5 @@
-<h1 class="text-red-200">{{ today().getFullYear() }}</h1>
-<h2>
+<h1 class="text-red-200 text-center">{{ today().getFullYear() }}</h1>
+<h2 class="text-center">
   {{ today().getDate() }} de
   {{ getMonthByNumber(today().getMonth()) }}
 </h2>
@@ -8,12 +8,23 @@
   class="w-full h-full border-2 rounded-sm p-4 grid grid-cols-7 grid-rows-6 gap-2"
 >
   @for (day of monthDays(); let i = $index; track i) { @if (i === 0) {
-  <div [class]="'col-start-' + 2" class="col-span-1 col-start bg-blue-200">
-    {{ day.day }} {{ day.name }}
+  <div
+    [class]="
+      'bg-blue-200 col-start-6 col-end-7' +
+      ' col-start-' +
+      day.weekNumber +
+      ' col-end-' +
+      (day.weekNumber + 1)
+    "
+  >
+    {{ day.monthNumber }} {{ day.name }}
   </div>
   } @else {
-  <div class="col-span-1 col-start bg-green-300">
-    {{ day.day }} {{ day.name }}
+  <div
+    [class.bg-red-300]="today().getDate() === day.monthNumber"
+    class="col-span-1 bg-re bg-green-300"
+  >
+    {{ day.monthNumber }} {{ day.name }}
   </div>
 
   } }
