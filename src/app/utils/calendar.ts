@@ -31,7 +31,7 @@ export const getNameOfWeek = (
   month: number,
   day: number
 ): string => {
-  const date = new Date(year, month - 1, day);
+  const date = new Date(year, month, day);
   return WEEK_DAYS[date.getDay()];
 };
 
@@ -40,6 +40,8 @@ export const getDayOfWeek = (
   month: number,
   day: number
 ): number => {
-  const date = new Date(year, month - 1, day);
+  const date = new Date(year, month, day);
   return date.getDay() !== 0 ? date.getDay() : 7;
 };
+
+export const DAYS_IN_WEEK = 7;
