@@ -1,10 +1,19 @@
-<h2 class="text-2xl font-bold mt-6">
-  {{ nameOfWeek }} {{ day }} de {{ monthName }} de {{ year }}
-</h2>
+<div class="flex items-center gap-4 w-full px-6">
+  <div
+    [routerLink]="'/home'"
+    class="w-6 h-6 rounded-full centered border-2 border-[#4B77D1]"
+  >
+    <img src="../../../assets/svgs/arrow-back.svg" alt="back-arrow" />
+  </div>
+  <h2 class="text-2xl font-bold">
+    {{ nameOfWeek }} {{ day }} de {{ monthName }} de {{ year }}
+  </h2>
+</div>
+
 <form
   [formGroup]="detailForm"
   (ngSubmit)="onSaveChanges()"
-  class="mt-8 w-full p-10"
+  class="w-full px-6 py-10"
 >
   <ul class="flex flex-col gap-4 items-start">
     @for (task of dayDetail()?.task | keyvalue; track $index) {
@@ -25,7 +34,7 @@
       <span>{{ task.key }}</span>
       <button
         (click)="onToggleCheck(task.key)"
-        class="rounded-3xl p-4 cursor-pointer bg-blue-400 text-white"
+        class="rounded-3xl p-4 cursor-pointer bg-blue-400 text-white text-xs min-w-[168px]"
       >
         {{
           detailForm.get(task.key)?.value
@@ -37,5 +46,10 @@
     }
   </ul>
 
-  <button type="submit">Guardar cambios</button>
+  <button
+    type="submit"
+    class="mt-12 w-full rounded-3xl p-4 cursor-pointer bg-green-400 text-white text-2xl"
+  >
+    Guardar cambios
+  </button>
 </form>

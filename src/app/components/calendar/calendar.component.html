@@ -5,45 +5,49 @@
 </h2>
 
 <div
-  class="w-full h-full border-2 rounded-sm p-4 grid grid-cols-7 grid-rows-6 gap-2"
+  class="w-full h-full border-2 rounded-sm p-4 grid grid-cols-7 grid-rows-7 gap-2"
 >
-  @for (day of prevMonthDays(); track $index) {
+  @for (day of week_days; track $index) {
+  <span class="col-span-1 p-1 bg-[#ddddff] max-[630px]:hidden">{{
+    day.name
+  }}</span>
+  } @for (day of week_days; track $index) {
+  <span
+    class="col-span-1 p-1 bg-[#ddddff] text-center font-bold text-gray-600 min-[630px]:hidden"
+    >{{ day.shortName }}</span
+  >
+  } @for (day of prevMonthDays(); track $index) {
   <div
     [class.bg-red-300]="today().getDate() === day.monthNumber"
-    class="col-span-1 bg-re bg-green-300 opacity-50"
+    class="col-span-1 bg-gray-300 opacity-50 p-1 text-xs relative"
     (click)="onSelectDay(day.id || '')"
   >
-    {{ day.monthNumber }} {{ day.name }}
+    {{ day.monthNumber }}
+    <img
+      src="../../../assets/svgs/check_circle.svg"
+      class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
+    />
   </div>
-  } @for (day of monthDays(); let i = $index; track i) { @if (i === 0) {
-  <div
-    [class]="
-      'bg-blue-200' +
-      ' col-start-' +
-      day.weekNumber +
-      ' col-end-' +
-      (day.weekNumber + 1)
-    "
-    (click)="onSelectDay(day.id || '')"
-  >
-    {{ day.monthNumber }} {{ day.name }}
-  </div>
-  } @else {
+  } @for (day of monthDays(); let i = $index; track i) {
   <div
     [class.bg-red-300]="today().getDate() === day.monthNumber"
-    class="col-span-1 bg-re bg-green-300"
+    class="col-span-1 p-1 text-xs relative"
     (click)="onSelectDay(day.id || '')"
   >
-    {{ day.monthNumber }} {{ day.name }}
+    {{ day.monthNumber }}
+    <img
+      src="../../../assets/svgs/check_circle.svg"
+      class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
+    />
   </div>
 
-  } } @for (day of nextMonthDays(); track $index) {
+  } @for (day of nextMonthDays(); track $index) {
   <div
     [class.bg-red-300]="today().getDate() === day.monthNumber"
-    class="col-span-1 bg-re bg-green-300 opacity-50"
+    class="col-span-1 bg-gray-300 opacity-50 p-1 text-xs"
     (click)="onSelectDay(day.id || '')"
   >
-    {{ day.monthNumber }} {{ day.name }}
+    {{ day.monthNumber }}
   </div>
   }
 </div>

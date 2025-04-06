@@ -1,10 +1,13 @@
-import { Component, OnInit, output, signal } from '@angular/core';
+import { Component, inject, OnInit, output, signal } from '@angular/core';
 import {
   DAYS_IN_WEEK,
+  DAYS_OF_WEEK,
   getDayOfWeek,
   getMonthNameByNumber,
   getNameOfWeek,
 } from '../../utils/calendar';
+import { MonthDay } from '../../models/models';
+import { CalendarService } from '../../services/calendar.service';
 
 @Component({
   selector: 'app-calendar',
@@ -14,6 +17,9 @@ import {
   styleUrl: './calendar.component.scss',
 })
 export class CalendarComponent implements OnInit {
+  /* Injections */
+  private readonly _calendarService = inject(CalendarService);
+
   /* Outputs */
   selectDay = output<string>();
 
@@ -22,10 +28,12 @@ export class CalendarComponent implements OnInit {
   monthDays = signal<MonthDay[]>([]);
   prevMonthDays = signal<MonthDay[]>([]);
   nextMonthDays = signal<MonthDay[]>([]);
+  calendar = this._calendarService.calendar;
 
   /* Variables */
   daysInCurrentMonth: number = 0;
   daysInPreviousMonth: number = 0;
+  week_days = DAYS_OF_WEEK;
 
   private getDaysInMonth(
     monthNumber: number,
@@ -68,6 +76,7 @@ export class CalendarComponent implements OnInit {
         ),
         isToday: false,
         completed: false,
+        uncompleted: false,
         missed: false,
       };
 
@@ -91,6 +100,7 @@ export class CalendarComponent implements OnInit {
         ),
         isToday: false,
         completed: false,
+        uncompleted: false,
         missed: false,
       };
 
@@ -99,6 +109,7 @@ export class CalendarComponent implements OnInit {
   }
 
   private initCalendarGrid(): void {
+    this._calendarService.getCalendar({ year: 2025, month: 4 });
     for (let i = 0; i < this.daysInCurrentMonth; i++) {
       const day: MonthDay = {
         weekNumber: getDayOfWeek(
@@ -114,6 +125,7 @@ export class CalendarComponent implements OnInit {
         ),
         isToday: this.today().getDate() === i + 1,
         completed: false,
+        uncompleted: false,
         missed: false,
       };
 
@@ -135,14 +147,4 @@ export class CalendarComponent implements OnInit {
   onSelectDay(dayId: string): void {
     this.selectDay.emit(dayId);
   }
-}
-
-interface MonthDay {
-  id?: string;
-  weekNumber: number;
-  monthNumber: number;
-  name: string;
-  isToday: boolean;
-  completed: boolean;
-  missed: boolean;
 }

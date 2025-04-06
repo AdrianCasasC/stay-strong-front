@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DayDetailService } from '../../services/day-detail.service';
 import { getMonthNameByNumber, getNameOfWeek } from '../../utils/calendar';
 import { KeyValuePipe } from '@angular/common';
@@ -8,7 +8,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-detail-page',
   standalone: true,
-  imports: [KeyValuePipe, ReactiveFormsModule],
+  imports: [KeyValuePipe, ReactiveFormsModule, RouterLink],
   providers: [KeyValuePipe],
   templateUrl: './detail-page.component.html',
   styleUrl: './detail-page.component.scss',
@@ -16,6 +16,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 export class DetailPageComponent implements OnInit {
   /* Injections */
   private readonly _route = inject(ActivatedRoute);
+  private readonly _router = inject(Router);
   private readonly _dayDetailService = inject(DayDetailService);
   private readonly _fb = inject(FormBuilder);
   private readonly keyValuePipe = inject(KeyValuePipe);
@@ -42,7 +43,6 @@ export class DetailPageComponent implements OnInit {
     tasks?.forEach((task) =>
       this.detailForm.get(task.key)?.setValue(task.value)
     );
-    console.log('Task: ', this.detailForm.get('calories'));
   }
 
   constructor() {
@@ -68,5 +68,7 @@ export class DetailPageComponent implements OnInit {
     this.detailForm.get(taskName)?.setValue(!currentVal);
   }
 
-  onSaveChanges(): void {}
+  onSaveChanges(): void {
+    this._router.navigateByUrl('/home');
+  }
 }

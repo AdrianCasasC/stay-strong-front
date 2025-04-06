@@ -23,6 +23,37 @@ const WEEK_DAYS = [
   'Sábado',
 ];
 
+export const DAYS_OF_WEEK = [
+  {
+    name: 'Lunes',
+    shortName: 'L',
+  },
+  {
+    name: 'Martes',
+    shortName: 'M',
+  },
+  {
+    name: 'Miércoles',
+    shortName: 'X',
+  },
+  {
+    name: 'Jueves',
+    shortName: 'J',
+  },
+  {
+    name: 'Viernes',
+    shortName: 'V',
+  },
+  {
+    name: 'Sábado',
+    shortName: 'S',
+  },
+  {
+    name: 'Domingo',
+    shortName: 'D',
+  },
+];
+
 export const getMonthNameByNumber = (monthNumber: number): string =>
   MONTH_NAMES[monthNumber] || '';
 

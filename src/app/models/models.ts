@@ -1,3 +1,18 @@
+export interface MonthDay {
+  id?: string;
+  weekNumber: number;
+  monthNumber: number;
+  name: string;
+  isToday: boolean;
+  completed: boolean;
+  uncompleted: boolean;
+  missed: boolean;
+}
+
+export interface MonthDayDto extends MonthDay {
+  date: Date;
+}
+
 interface DayTask {
   steps: boolean;
   calories: boolean;
@@ -10,4 +25,11 @@ export interface DetailDay {
   id: string;
   date: Date;
   task: DayTask;
+}
+
+export interface Calendar {
+  id: string;
+  year: number;
+  month: number;
+  days: MonthDayDto[];
 }

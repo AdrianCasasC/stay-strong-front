@@ -11,8 +11,18 @@ export class RequestService<T> {
     @Inject('API_URL') private apiUrl: string
   ) {}
 
-  protected getAll(): Observable<T[]> {
-    return this.http.get<T[]>(`${this.apiUrl}`, { withCredentials: true });
+  protected getAll(params?: Record<string, any>): Observable<T[]> {
+    return this.http.get<T[]>(`${this.apiUrl}`, {
+      withCredentials: true,
+      params,
+    });
+  }
+
+  protected get(url?: string, params?: Record<string, any>): Observable<T[]> {
+    return this.http.get<T[]>(`${this.apiUrl}${url ? url : ''}`, {
+      withCredentials: true,
+      params,
+    });
   }
 
   protected getById(id: string): Observable<T> {
