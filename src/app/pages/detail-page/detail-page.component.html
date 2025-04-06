@@ -1,4 +1,41 @@
-<h2>
-  {{ dayDetail()?.date?.getDate() }} de {{ dayDetail()?.date?.getMonth() }} de
-  {{ dayDetail()?.date?.getFullYear() }}
+<h2 class="text-2xl font-bold mt-6">
+  {{ nameOfWeek }} {{ day }} de {{ monthName }} de {{ year }}
 </h2>
+<form
+  [formGroup]="detailForm"
+  (ngSubmit)="onSaveChanges()"
+  class="mt-8 w-full p-10"
+>
+  <ul class="flex flex-col gap-4 items-start">
+    @for (task of dayDetail()?.task | keyvalue; track $index) {
+    <li class="flex justify-between items-center w-full">
+      <div class="rounded-full w-8 h-8">
+        @if (detailForm.get(task.key)?.value) {
+        <img
+          class="rounded-full w-full h-full"
+          src="../../../assets/svgs/check_circle.svg"
+          alt="green-check"
+        />
+        } @else {
+        <div
+          class="rounded-full w-full h-full bg-white border-2 border-gray-400"
+        ></div>
+        }
+      </div>
+      <span>{{ task.key }}</span>
+      <button
+        (click)="onToggleCheck(task.key)"
+        class="rounded-3xl p-4 cursor-pointer bg-blue-400 text-white"
+      >
+        {{
+          detailForm.get(task.key)?.value
+            ? "Desmarcar"
+            : "Marcar como completado"
+        }}
+      </button>
+    </li>
+    }
+  </ul>
+
+  <button type="submit">Guardar cambios</button>
+</form>

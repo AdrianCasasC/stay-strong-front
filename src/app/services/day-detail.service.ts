@@ -3,6 +3,7 @@ import { RequestService } from './request.service';
 import { DetailDay } from '../models/models';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,12 +18,17 @@ export class DayDetailService extends RequestService<DetailDay> {
   }
 
   constructor(http: HttpClient) {
-    super(http, `${environment.apiUrl}/detail`);
+    super(http, `${environment.apiUrl}/day-details`);
   }
 
   getDayDetails(dayId: string): void {
-    this.getById(dayId).subscribe((dayDetail) => {
-      this.detail = dayDetail;
-    });
+    this.getById(dayId)
+      .pipe(
+        tap(
+          (dayDetail) =>
+            (this.detail = { ...dayDetail, date: new Date(dayDetail.date) })
+        )
+      )
+      .subscribe();
   }
 }

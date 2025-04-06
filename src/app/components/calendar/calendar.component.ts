@@ -15,7 +15,7 @@ import {
 })
 export class CalendarComponent implements OnInit {
   /* Outputs */
-  onSelectDay = output<string>();
+  selectDay = output<string>();
 
   /* Signals */
   today = signal(new Date());
@@ -73,7 +73,6 @@ export class CalendarComponent implements OnInit {
 
       this.prevMonthDays.update((prev) => [...prev, day]);
     }
-    console.log('Prev Month Days: ', this.prevMonthDays());
   }
 
   private initNextMonthDays(): void {
@@ -97,7 +96,6 @@ export class CalendarComponent implements OnInit {
 
       this.nextMonthDays.update((prev) => [...prev, day]);
     }
-    console.log('Next Month Days: ', this.nextMonthDays());
   }
 
   private initCalendarGrid(): void {
@@ -128,15 +126,19 @@ export class CalendarComponent implements OnInit {
     this.initCalendarGrid();
     this.initPrevMonthDays();
     this.initNextMonthDays();
-    console.log('Days: ', this.monthDays());
   }
 
   getMonthByNumber(monthNumber: number): string {
     return getMonthNameByNumber(monthNumber);
   }
+
+  onSelectDay(dayId: string): void {
+    this.selectDay.emit(dayId);
+  }
 }
 
 interface MonthDay {
+  id?: string;
   weekNumber: number;
   monthNumber: number;
   name: string;
