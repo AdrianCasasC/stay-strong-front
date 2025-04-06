@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, output, signal } from '@angular/core';
 import {
   DAYS_IN_WEEK,
   getDayOfWeek,
@@ -14,6 +14,9 @@ import {
   styleUrl: './calendar.component.scss',
 })
 export class CalendarComponent implements OnInit {
+  /* Outputs */
+  onSelectDay = output<string>();
+
   /* Signals */
   today = signal(new Date());
   monthDays = signal<MonthDay[]>([]);
