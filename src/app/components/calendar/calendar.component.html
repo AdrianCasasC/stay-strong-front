@@ -16,32 +16,58 @@
     class="col-span-1 p-1 bg-[#ddddff] text-center font-bold text-gray-600 min-[630px]:hidden"
     >{{ day.shortName }}</span
   >
-  } @for (day of prevMonthDays(); track $index) {
+  } @for (day of prevMonthDays; track $index) {
   <div
     [class.bg-red-300]="today().getDate() === day.monthNumber"
     class="col-span-1 bg-gray-300 opacity-50 p-1 text-xs relative"
     (click)="onSelectDay(day.id || '')"
   >
     {{ day.monthNumber }}
-    <img
+    @if (day.completed) {
+      <img
       src="../../../assets/svgs/check_circle.svg"
       class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
     />
+    }@else if(day.uncompleted) {
+      <img
+      src="../../../assets/svgs/uncompleted.svg"
+      class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
+    />
+    }@else if(day.missed) {
+      <img
+      src="../../../assets/svgs/warning.svg"
+      class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
+    />
+    }
   </div>
-  } @for (day of monthDays(); let i = $index; track i) {
+  } @for (day of monthDays; let i = $index; track i) {
   <div
     [class.bg-red-300]="today().getDate() === day.monthNumber"
     class="col-span-1 p-1 text-xs relative"
     (click)="onSelectDay(day.id || '')"
   >
     {{ day.monthNumber }}
-    <img
+    @if (day.completed) {
+      <img
       src="../../../assets/svgs/check_circle.svg"
       class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
     />
+    }@else if(day.uncompleted) {
+      <img
+      src="../../../assets/svgs/uncompleted.svg"
+      class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
+    />
+    }
+    @else if(day.missed) {
+      <img
+      src="../../../assets/svgs/warning.svg"
+      class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
+    />
+    }
+    
   </div>
 
-  } @for (day of nextMonthDays(); track $index) {
+  } @for (day of nextMonthDays; track $index) {
   <div
     [class.bg-red-300]="today().getDate() === day.monthNumber"
     class="col-span-1 bg-gray-300 opacity-50 p-1 text-xs"

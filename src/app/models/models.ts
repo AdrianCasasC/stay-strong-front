@@ -1,5 +1,6 @@
 export interface MonthDay {
   id?: string;
+  date: Date,
   weekNumber: number;
   monthNumber: number;
   name: string;
@@ -31,5 +32,5 @@ export interface Calendar {
   id: string;
   year: number;
   month: number;
-  days: MonthDayDto[];
+  days: DetailDay[];
 }
