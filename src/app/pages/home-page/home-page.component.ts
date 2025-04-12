@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CalendarComponent } from '../../components/calendar/calendar.component';
 import { Router } from '@angular/router';
+import { getDateString } from '../../../utils/utils';
 
 @Component({
   selector: 'app-home-page',
@@ -13,7 +14,7 @@ export class HomePageComponent {
   /* Injections */
   private readonly _router = inject(Router);
 
-  onSelectDay(dayId: string): void {
-    this._router.navigate(['detail', dayId]);
+  onSelectDay({ dayId, dayDate }: { dayId: string; dayDate: Date }): void {
+    this._router.navigate(['detail', dayId, getDateString(dayDate)]);
   }
 }

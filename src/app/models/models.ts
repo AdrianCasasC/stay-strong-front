@@ -23,8 +23,14 @@ interface DayTask {
 }
 
 export interface DetailDay {
-  id: string;
-  date: Date;
+  id?: string;
+  date: Date | null;
+  tasks: DayTask;
+}
+
+export interface DetailDayEntity {
+  id?: string;
+  date: string;
   tasks: DayTask;
 }
 

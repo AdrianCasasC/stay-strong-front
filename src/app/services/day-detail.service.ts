@@ -26,7 +26,10 @@ export class DayDetailService extends RequestService {
       .pipe(
         tap(
           (dayDetail) =>
-            (this.detail = { ...dayDetail, date: new Date(dayDetail.date) })
+            (this.detail = {
+              ...dayDetail,
+              date: dayDetail.date ? new Date(dayDetail.date) : null,
+            })
         )
       )
       .subscribe();

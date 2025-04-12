@@ -28,7 +28,7 @@ export class CalendarComponent implements OnInit {
   private readonly _calendarService = inject(CalendarService);
 
   /* Outputs */
-  selectDay = output<string>();
+  selectDay = output<{ dayId: string; dayDate: Date }>();
 
   /* Signals */
   today = signal(new Date());
@@ -36,6 +36,7 @@ export class CalendarComponent implements OnInit {
   prevMonthDays: MonthDay[] = [];
   nextMonthDays: MonthDay[] = [];
   calendar = this._calendarService.calendar;
+  isLoading = this._calendarService.isLoading;
 
   /* Variables */
   daysInCurrentMonth: number = 0;
@@ -164,7 +165,9 @@ export class CalendarComponent implements OnInit {
     effect(() => {
       this.calendar()?.calendars.previous?.days.forEach((day) => {
         this.prevMonthDays.forEach((prevMonthDay) => {
-          if (day.date.getDate() === prevMonthDay.date.getDate()) {
+          if (day.date?.getDate() === prevMonthDay.date.getDate()) {
+            prevMonthDay.id = day.id;
+            prevMonthDay.date = day.date;
             prevMonthDay.completed = Object.keys(day.tasks).every(
               (taskKey) => day.tasks[taskKey as keyof typeof day.tasks] === true
             );
@@ -181,7 +184,9 @@ export class CalendarComponent implements OnInit {
       });
       this.calendar()?.calendars.current?.days.forEach((day) => {
         this.monthDays.forEach((monthDay) => {
-          if (day.date.getDate() === monthDay.date.getDate()) {
+          if (day.date?.getDate() === monthDay.date.getDate()) {
+            monthDay.id = day.id;
+            monthDay.date = day.date;
             monthDay.completed = Object.keys(day.tasks).every(
               (taskKey) => day.tasks[taskKey as keyof typeof day.tasks] === true
             );
@@ -210,7 +215,7 @@ export class CalendarComponent implements OnInit {
     return getMonthNameByNumber(monthNumber);
   }
 
-  onSelectDay(dayId: string): void {
-    this.selectDay.emit(dayId);
+  onSelectDay(detailDayParams: { dayId: string; dayDate: Date }): void {
+    this.selectDay.emit(detailDayParams);
   }
 }

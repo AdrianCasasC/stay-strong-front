@@ -7,7 +7,14 @@
 <div
   class="w-full h-full border-2 rounded-sm p-4 grid grid-cols-7 grid-rows-7 gap-2"
 >
-  @for (day of week_days; track $index) {
+  @if (isLoading()) {
+  <div class="left-0 top-0 w-full h-full centered absolute">
+    <img
+      src="../../../assets/svgs/loader.svg"
+      class="w-10 h-10 absolute top-[20%] spin"
+    />
+  </div>
+  } @for (day of week_days; track $index) {
   <span class="col-span-1 p-1 bg-[#ddddff] max-[630px]:hidden">{{
     day.name
   }}</span>
@@ -20,21 +27,21 @@
   <div
     [class.bg-red-300]="today().getDate() === day.monthNumber"
     class="col-span-1 bg-gray-300 opacity-50 p-1 text-xs relative"
-    (click)="onSelectDay(day.id || '')"
+    (click)="onSelectDay({ dayId: day.id || '', dayDate: day.date })"
   >
     {{ day.monthNumber }}
     @if (day.completed) {
-      <img
+    <img
       src="../../../assets/svgs/check_circle.svg"
       class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
     />
     }@else if(day.uncompleted) {
-      <img
+    <img
       src="../../../assets/svgs/uncompleted.svg"
       class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
     />
     }@else if(day.missed) {
-      <img
+    <img
       src="../../../assets/svgs/warning.svg"
       class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
     />
@@ -44,34 +51,32 @@
   <div
     [class.bg-red-300]="today().getDate() === day.monthNumber"
     class="col-span-1 p-1 text-xs relative"
-    (click)="onSelectDay(day.id || '')"
+    (click)="onSelectDay({ dayId: day.id || '', dayDate: day.date })"
   >
     {{ day.monthNumber }}
     @if (day.completed) {
-      <img
+    <img
       src="../../../assets/svgs/check_circle.svg"
       class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
     />
     }@else if(day.uncompleted) {
-      <img
+    <img
       src="../../../assets/svgs/uncompleted.svg"
       class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
     />
-    }
-    @else if(day.missed) {
-      <img
+    } @else if(day.missed) {
+    <img
       src="../../../assets/svgs/warning.svg"
       class="absolute w-full h-full top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 -z-10"
     />
     }
-    
   </div>
 
   } @for (day of nextMonthDays; track $index) {
   <div
     [class.bg-red-300]="today().getDate() === day.monthNumber"
     class="col-span-1 bg-gray-300 opacity-50 p-1 text-xs"
-    (click)="onSelectDay(day.id || '')"
+    (click)="onSelectDay({ dayId: day.id || '', dayDate: day.date })"
   >
     {{ day.monthNumber }}
   </div>

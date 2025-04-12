@@ -25,18 +25,24 @@ export class RequestService {
     });
   }
 
-  protected getById<T>(id: string): Observable<T> {
-    return this.http.get<T>(`${this.apiUrl}/${id}`, { withCredentials: true });
+  protected getById<T>(id: string, url?: string): Observable<T> {
+    return this.http.get<T>(`${this.apiUrl}${url ? url : ''}/${id}`, {
+      withCredentials: true,
+    });
   }
 
-  protected create<T>(data: T, url: string = ''): Observable<T> {
+  protected create<T>(url: string = '', data: T): Observable<T> {
     return this.http.post<T>(`${this.apiUrl}${url}`, data, {
       withCredentials: true,
     });
   }
 
-  protected update<T>(id: number | string, data: Partial<T>): Observable<T> {
-    return this.http.put<T>(`${this.apiUrl}/${id}`, data, {
+  protected update<T>(
+    url: string = '',
+    id: number | string,
+    data: Partial<T>
+  ): Observable<T> {
+    return this.http.put<T>(`${this.apiUrl}${url ? url : ''}/${id}`, data, {
       withCredentials: true,
     });
   }
