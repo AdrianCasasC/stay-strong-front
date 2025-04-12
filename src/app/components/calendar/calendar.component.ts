@@ -1,4 +1,11 @@
-import { Component, effect, inject, OnInit, output, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  OnInit,
+  output,
+  signal,
+} from '@angular/core';
 import {
   DAYS_IN_WEEK,
   DAYS_OF_WEEK,
@@ -151,30 +158,45 @@ export class CalendarComponent implements OnInit {
 
       this.monthDays.push(day);
     }
-    
   }
 
   constructor() {
     effect(() => {
-      this.calendar()[0]?.days.forEach(day => {
-        this.prevMonthDays.forEach(prevMonthDay => {
-            if (day.date.getDate() === prevMonthDay.date.getDate()) {
-              prevMonthDay.completed = Object.keys(day.task).every(taskKey => day.task[taskKey as keyof typeof day.task] === true);
-              prevMonthDay.uncompleted = Object.keys(day.task).every(taskKey => day.task[taskKey as keyof typeof day.task] === false);
-              prevMonthDay.missed = Object.keys(day.task).some(taskKey => day.task[taskKey as keyof typeof day.task] === false);
-            }
+      this.calendar()?.calendars.previous?.days.forEach((day) => {
+        this.prevMonthDays.forEach((prevMonthDay) => {
+          if (day.date.getDate() === prevMonthDay.date.getDate()) {
+            prevMonthDay.completed = Object.keys(day.tasks).every(
+              (taskKey) => day.tasks[taskKey as keyof typeof day.tasks] === true
+            );
+            prevMonthDay.uncompleted = Object.keys(day.tasks).every(
+              (taskKey) =>
+                day.tasks[taskKey as keyof typeof day.tasks] === false
+            );
+            prevMonthDay.missed = Object.keys(day.tasks).some(
+              (taskKey) =>
+                day.tasks[taskKey as keyof typeof day.tasks] === false
+            );
+          }
         });
       });
-      this.calendar()[1]?.days.forEach(day => {
-        this.monthDays.forEach(monthDay => {
-            if (day.date.getDate() === monthDay.date.getDate()) {
-              monthDay.completed = Object.keys(day.task).every(taskKey => day.task[taskKey as keyof typeof day.task] === true);
-              monthDay.uncompleted = Object.keys(day.task).every(taskKey => day.task[taskKey as keyof typeof day.task] === false);
-              monthDay.missed = Object.keys(day.task).some(taskKey => day.task[taskKey as keyof typeof day.task] === false);
-            }
+      this.calendar()?.calendars.current?.days.forEach((day) => {
+        this.monthDays.forEach((monthDay) => {
+          if (day.date.getDate() === monthDay.date.getDate()) {
+            monthDay.completed = Object.keys(day.tasks).every(
+              (taskKey) => day.tasks[taskKey as keyof typeof day.tasks] === true
+            );
+            monthDay.uncompleted = Object.keys(day.tasks).every(
+              (taskKey) =>
+                day.tasks[taskKey as keyof typeof day.tasks] === false
+            );
+            monthDay.missed = Object.keys(day.tasks).some(
+              (taskKey) =>
+                day.tasks[taskKey as keyof typeof day.tasks] === false
+            );
+          }
         });
       });
-    })
+    });
   }
 
   ngOnInit(): void {

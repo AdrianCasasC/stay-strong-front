@@ -39,7 +39,7 @@ export class DetailPageComponent implements OnInit {
   });
 
   private initForm(): void {
-    const tasks = this.keyValuePipe.transform(this.dayDetail()?.task);
+    const tasks = this.keyValuePipe.transform(this.dayDetail()?.tasks);
     tasks?.forEach((task) =>
       this.detailForm.get(task.key)?.setValue(task.value)
     );

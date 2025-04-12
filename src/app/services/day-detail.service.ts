@@ -8,7 +8,7 @@ import { tap } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class DayDetailService extends RequestService<DetailDay> {
+export class DayDetailService extends RequestService {
   /* Signals */
   private readonly _dayDetail = signal<DetailDay | null>(null);
   dayDetail = this._dayDetail.asReadonly();
@@ -22,7 +22,7 @@ export class DayDetailService extends RequestService<DetailDay> {
   }
 
   getDayDetails(dayId: string): void {
-    this.getById(dayId)
+    this.getById<DetailDay>(dayId)
       .pipe(
         tap(
           (dayDetail) =>

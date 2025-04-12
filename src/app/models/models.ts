@@ -1,6 +1,6 @@
 export interface MonthDay {
   id?: string;
-  date: Date,
+  date: Date;
   weekNumber: number;
   monthNumber: number;
   name: string;
@@ -25,7 +25,7 @@ interface DayTask {
 export interface DetailDay {
   id: string;
   date: Date;
-  task: DayTask;
+  tasks: DayTask;
 }
 
 export interface Calendar {
@@ -33,4 +33,14 @@ export interface Calendar {
   year: number;
   month: number;
   days: DetailDay[];
+}
+
+export interface PrevCurrNextCalendar {
+  previous: Calendar;
+  current: Calendar;
+  next: Calendar;
+}
+
+export interface Calendars {
+  calendars: PrevCurrNextCalendar;
 }

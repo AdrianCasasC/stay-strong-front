@@ -16,7 +16,7 @@
   class="w-full px-6 py-10"
 >
   <ul class="flex flex-col gap-4 items-start">
-    @for (task of dayDetail()?.task | keyvalue; track $index) {
+    @for (task of dayDetail()?.tasks | keyvalue; track $index) {
     <li class="flex justify-between items-center w-full">
       <div class="rounded-full w-8 h-8">
         @if (detailForm.get(task.key)?.value) {

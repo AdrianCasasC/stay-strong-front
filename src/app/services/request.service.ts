@@ -5,37 +5,37 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class RequestService<T> {
+export class RequestService {
   constructor(
     protected http: HttpClient,
     @Inject('API_URL') private apiUrl: string
   ) {}
 
-  protected getAll(params?: Record<string, any>): Observable<T[]> {
+  protected getAll<T>(params?: Record<string, any>): Observable<T[]> {
     return this.http.get<T[]>(`${this.apiUrl}`, {
       withCredentials: true,
       params,
     });
   }
 
-  protected get(url?: string, params?: Record<string, any>): Observable<T[]> {
-    return this.http.get<T[]>(`${this.apiUrl}${url ? url : ''}`, {
+  protected get<T>(url?: string, params?: Record<string, any>): Observable<T> {
+    return this.http.get<T>(`${this.apiUrl}${url ? url : ''}`, {
       withCredentials: true,
       params,
     });
   }
 
-  protected getById(id: string): Observable<T> {
+  protected getById<T>(id: string): Observable<T> {
     return this.http.get<T>(`${this.apiUrl}/${id}`, { withCredentials: true });
   }
 
-  protected create(data: T, url: string = ''): Observable<T> {
+  protected create<T>(data: T, url: string = ''): Observable<T> {
     return this.http.post<T>(`${this.apiUrl}${url}`, data, {
       withCredentials: true,
     });
   }
 
-  protected update(id: number | string, data: Partial<T>): Observable<T> {
+  protected update<T>(id: number | string, data: Partial<T>): Observable<T> {
     return this.http.put<T>(`${this.apiUrl}/${id}`, data, {
       withCredentials: true,
     });
