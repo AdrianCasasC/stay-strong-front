@@ -52,3 +52,8 @@ export interface PrevCurrNextCalendar {
 export interface Calendars {
   calendars: PrevCurrNextCalendar;
 }
+
+export interface CalendarWeight {
+  date: string;
+  weight: number;
+}

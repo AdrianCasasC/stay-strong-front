@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import {
   Calendar,
   Calendars,
+  CalendarWeight,
   DetailDay,
   DetailDayEntity,
 } from '../models/models';
@@ -21,6 +22,8 @@ export class CalendarService extends RequestService {
   dayDetail = this._dayDetail.asReadonly();
   private readonly _isLoading = signal<boolean>(false);
   isLoading = this._isLoading.asReadonly();
+  private readonly _calendarWeights = signal<CalendarWeight[]>([]);
+  calendarWeights = this._calendarWeights.asReadonly();
 
   set calendars(value: Calendars) {
     this._calendar.set(value);
@@ -28,6 +31,10 @@ export class CalendarService extends RequestService {
 
   set loading(value: boolean) {
     this._isLoading.set(value);
+  }
+
+  set calendarWeightsSignal(value: CalendarWeight[]) {
+    this._calendarWeights.set(value);
   }
 
   constructor(http: HttpClient) {
@@ -139,5 +146,15 @@ export class CalendarService extends RequestService {
       ),
       finalize(() => (this.loading = false))
     );
+  }
+
+  getCalendarWeights(): void {
+    this.get<CalendarWeight[]>('/corporal-weight')
+      .pipe(
+        tap((resp) => {
+          this.calendarWeightsSignal = resp;
+        })
+      )
+      .subscribe();
   }
 }
