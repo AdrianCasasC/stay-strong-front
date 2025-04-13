@@ -1,4 +1,4 @@
-<div class="flex items-center gap-4 w-full px-6">
+<div class="flex items-center gap-4 w-full px-6 mt-6">
   <div
     [routerLink]="'/home'"
     class="w-6 h-6 rounded-full centered border-2 border-[#4B77D1]"
@@ -40,7 +40,7 @@
         ></div>
         }
       </div>
-      <span>{{ task.key }}</span>
+      <span>{{ tasksNames[task.key] }}</span>
       <button
         type="button"
         (click)="onToggleCheck(task.key)"
@@ -55,6 +55,16 @@
     </li>
     }
   </ul>
+
+  <div class="flex justify-center items-center gap-4 mt-8 text-xl font-bold">
+    <span>Peso:</span>
+    <input
+      class="border-2 border-black p-1 w-1/2 rounded-xl pl-3 font-light"
+      type="number"
+      [formControlName]="'weightNumber'"
+    />
+    <span>Kg</span>
+  </div>
 
   <button
     type="submit"

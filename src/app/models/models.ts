@@ -26,12 +26,14 @@ export interface DetailDay {
   id?: string;
   date: Date | null;
   tasks: DayTask;
+  weightNumber: number | null;
 }
 
 export interface DetailDayEntity {
   id?: string;
   date: string;
   tasks: DayTask;
+  weightNumber: number | null;
 }
 
 export interface Calendar {

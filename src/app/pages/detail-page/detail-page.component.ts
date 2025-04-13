@@ -42,13 +42,25 @@ export class DetailPageComponent implements OnInit {
     suplementation: [false],
     training: [false],
     weight: [false],
+    weightNumber: this._fb.control<number | null>(null),
   });
+
+  tasksNames = {
+    calories: 'Calorias',
+    steps: 'Pasos',
+    suplementation: 'Suplementación',
+    training: 'Entrenamiento',
+    weight: 'Peso',
+  };
 
   private initForm(): void {
     const tasks = this.keyValuePipe.transform(this.dayDetail()?.tasks);
     tasks?.forEach((task) =>
       this.detailForm.get(task.key)?.setValue(task.value)
     );
+    this.detailForm
+      .get('weightNumber')
+      ?.setValue(this.dayDetail()?.weightNumber || null);
   }
 
   constructor() {
@@ -91,6 +103,7 @@ export class DetailPageComponent implements OnInit {
         suplementation: this.detailForm.get('suplementation')?.value || false,
         weight: this.detailForm.get('weight')?.value || false,
       },
+      weightNumber: this.detailForm.get('weightNumber')?.value || null,
     };
     if (this.dayId) {
       updatedDay.id = this.dayId;
