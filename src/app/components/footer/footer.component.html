@@ -1,6 +1,11 @@
-<ul class="w-full h-full flex justify-between items-center my-2 mx-8">
+<ul class="w-full h-full flex justify-between items-center">
   @for (tab of tabs; track $index) {
-  <li [routerLink]="tab === 'training' ? '/training/' + dayId() : '/' + tab">
+  <li
+    [routerLink]="tab === 'home' ? '/home' : '/details/' + tab + '/' + dayId()"
+    class="h-full w-full centered"
+    [class.bg-[#5d4ccb]]="tab === selectedTab"
+    (click)="onSelectTab(tab)"
+  >
     <img
       class="w-[56px]"
       [src]="'../../../assets/svgs/' + tab + '.svg'"

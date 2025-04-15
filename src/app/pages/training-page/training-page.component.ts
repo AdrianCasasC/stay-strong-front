@@ -3,11 +3,12 @@ import { ExerciseModalComponent } from '../../components/exercise-modal/exercise
 import { Exercise } from '../../models/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TrainingService } from '../../services/training.service';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-training-page',
   standalone: true,
-  imports: [ExerciseModalComponent],
+  imports: [ExerciseModalComponent, FooterComponent],
   templateUrl: './training-page.component.html',
   styleUrl: './training-page.component.scss',
 })

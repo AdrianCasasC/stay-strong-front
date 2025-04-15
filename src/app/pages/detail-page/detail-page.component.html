@@ -13,7 +13,7 @@
 <form
   [formGroup]="detailForm"
   (ngSubmit)="onSaveChanges()"
-  class="w-full px-6 py-10"
+  class="w-full px-6 py-10 flex flex-col justify-evenly"
 >
   @if (isLoading()) {
   <div class="left-0 top-0 w-full h-full centered absolute">
@@ -73,5 +73,3 @@
     Guardar cambios
   </button>
 </form>
-
-<app-footer></app-footer>

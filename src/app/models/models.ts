@@ -67,3 +67,5 @@ export interface Exercise {
   name: string;
   series: Serie[];
 }
+
+export type FooterTab = 'home' | 'detail' | 'training';

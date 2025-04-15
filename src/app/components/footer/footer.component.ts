@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { FooterTab } from '../../models/models';
 
 @Component({
   selector: 'app-footer',
@@ -10,5 +11,10 @@ import { RouterLink } from '@angular/router';
 })
 export class FooterComponent {
   dayId = input<string>();
-  tabs = ['home', 'check_list', 'training'];
+  tabs: FooterTab[] = ['home', 'detail', 'training'];
+  selectedTab: FooterTab = 'detail';
+
+  onSelectTab(tab: FooterTab): void {
+    this.selectedTab = tab;
+  }
 }
