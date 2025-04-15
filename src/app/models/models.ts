@@ -57,3 +57,13 @@ export interface CalendarWeight {
   date: string;
   weight: number;
 }
+
+export interface Serie {
+  repetitions: number;
+  weight: number;
+}
+
+export interface Exercise {
+  name: string;
+  series: Serie[];
+}

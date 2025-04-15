@@ -1,0 +1,39 @@
+<h1>Entrenamiento {{ trainingName }}</h1>
+
+<button (click)="onOpenExerciseModal()">Añadir ejercicio</button>
+
+@if (exercises().length) { @for (exercise of exercises(); track $index) {
+<div>
+  <h2>{{ exercise.name }}</h2>
+  @for (serie of exercise.series; let i = $index; track i) {
+  <div>
+    <span>Serie {{ i + 1 }}</span>
+    <div>
+      <span>Repeticiones: {{ serie.repetitions }}</span>
+      <span>Peso: {{ serie.weight }}</span>
+    </div>
+  </div>
+  }
+</div>
+} }@else { @for (exercise of draftExercises; track $index) {
+<div>
+  <h2>{{ exercise.name }}</h2>
+  @for (serie of exercise.series; let i = $index; track i) {
+  <div>
+    <span>Serie {{ i + 1 }}</span>
+    <div>
+      <span>Repeticiones: {{ serie.repetitions }}</span>
+      <span>Peso: {{ serie.weight }}</span>
+    </div>
+  </div>
+  }
+</div>
+} }
+
+<button (click)="onSaveTraining()">Guardar Entrenamiento</button>
+
+@if (showExerciseModal) {
+<app-exercise-modal
+  (onSaveExercise)="onSaveExercise($event)"
+></app-exercise-modal>
+}

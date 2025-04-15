@@ -16,6 +16,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'training/:dayId',
+    loadComponent: () =>
+      import('./pages/detail-page/detail-page.component').then(
+        (m) => m.DetailPageComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: 'home',
   },

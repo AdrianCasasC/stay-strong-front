@@ -1,0 +1,11 @@
+<ul class="w-full h-full flex justify-between items-center my-2 mx-8">
+  @for (tab of tabs; track $index) {
+  <li [routerLink]="tab === 'training' ? '/training/' + dayId() : '/' + tab">
+    <img
+      class="w-[56px]"
+      [src]="'../../../assets/svgs/' + tab + '.svg'"
+      [alt]="tab + '_icon'"
+    />
+  </li>
+  }
+</ul>

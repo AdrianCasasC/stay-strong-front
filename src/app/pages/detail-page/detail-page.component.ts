@@ -7,11 +7,12 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CalendarService } from '../../services/calendar.service';
 import { DetailDay, DetailDayEntity } from '../../models/models';
 import { getDateString } from '../../../utils/utils';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-detail-page',
   standalone: true,
-  imports: [KeyValuePipe, ReactiveFormsModule, RouterLink],
+  imports: [KeyValuePipe, ReactiveFormsModule, RouterLink, FooterComponent],
   providers: [KeyValuePipe],
   templateUrl: './detail-page.component.html',
   styleUrl: './detail-page.component.scss',
