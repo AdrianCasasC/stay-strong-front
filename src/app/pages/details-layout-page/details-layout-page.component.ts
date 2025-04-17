@@ -21,7 +21,8 @@ export class DetailsLayoutPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.dayId = this._route.snapshot.paramMap.get('dayId') || '';
-    this.dayDate = this._route.snapshot.paramMap.get('dayDate') || '';
+    this.dayDate =
+      this._route.snapshot.paramMap.get('dayDate')?.replaceAll('/', '-') || '';
     this._dayDetailService.dayId = this.dayId;
     this._dayDetailService.dayDate = this.dayDate;
     this._router.navigate([

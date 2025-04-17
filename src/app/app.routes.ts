@@ -27,8 +27,8 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./routes/detail.routes').then((m) => m.DETAILS_ROUTES),
   },
-  {
-    path: '**',
-    redirectTo: 'home',
-  },
+  // {
+  //   path: '**',
+  //   redirectTo: 'home',
+  // },
 ];

@@ -4,6 +4,7 @@ import { Exercise } from '../../models/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TrainingService } from '../../services/training.service';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { DayDetailService } from '../../services/day-detail.service';
 
 @Component({
   selector: 'app-training-page',
@@ -15,20 +16,22 @@ import { FooterComponent } from '../../components/footer/footer.component';
 export class TrainingPageComponent implements OnInit {
   /* Injections */
   private readonly _router = inject(Router);
-  private readonly _route = inject(ActivatedRoute);
+  private readonly _dayDetailService = inject(DayDetailService);
   private readonly _trainingService = inject(TrainingService);
 
   /* Signals */
   exercises = this._trainingService.exercises;
 
-  dayId = '';
+  dayIdVal = this._dayDetailService.dayIdVal;
+
+  /* Variables */
+
   trainingName = 'Pierna';
   showExerciseModal = false;
   draftExercises: Exercise[] = [];
 
   ngOnInit(): void {
-    this.dayId = this._route.snapshot.paramMap.get('dayId') || '';
-    this._trainingService.getDayExercises(this.dayId);
+    this._trainingService.getDayExercises(this.dayIdVal());
   }
 
   onOpenExerciseModal(): void {
@@ -41,7 +44,7 @@ export class TrainingPageComponent implements OnInit {
 
   onSaveTraining(): void {
     this._trainingService
-      .saveDayExercises(this.dayId, this.draftExercises)
+      .saveDayExercises(this.dayIdVal(), this.draftExercises)
       .subscribe({
         next: () => this._router.navigateByUrl('/home'),
       });
