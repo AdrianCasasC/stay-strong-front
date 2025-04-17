@@ -23,7 +23,7 @@ export const routes: Routes = [
   //     ),
   // },
   {
-    path: 'details',
+    path: 'details/:dayId/:dayDate',
     loadChildren: () =>
       import('./routes/detail.routes').then((m) => m.DETAILS_ROUTES),
   },

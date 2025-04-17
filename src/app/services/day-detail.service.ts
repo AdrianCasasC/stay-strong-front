@@ -12,9 +12,21 @@ export class DayDetailService extends RequestService {
   /* Signals */
   private readonly _dayDetail = signal<DetailDay | null>(null);
   dayDetail = this._dayDetail.asReadonly();
+  private readonly _dayId = signal<string>('');
+  dayIdVal = this._dayId.asReadonly();
+  private readonly _dayDate = signal<string>('');
+  dayDateVal = this._dayDate.asReadonly();
 
   set detail(value: DetailDay | null) {
     this._dayDetail.set(value);
+  }
+
+  set dayId(value: string) {
+    this._dayId.set(value);
+  }
+
+  set dayDate(value: string) {
+    this._dayDate.set(value);
   }
 
   constructor(http: HttpClient) {

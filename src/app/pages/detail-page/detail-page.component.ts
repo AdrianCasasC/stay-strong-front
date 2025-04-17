@@ -8,6 +8,7 @@ import { CalendarService } from '../../services/calendar.service';
 import { DetailDay, DetailDayEntity } from '../../models/models';
 import { getDateString } from '../../../utils/utils';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { DetailsLayoutPageComponent } from '../details-layout-page/details-layout-page.component';
 
 @Component({
   selector: 'app-detail-page',
@@ -19,8 +20,8 @@ import { FooterComponent } from '../../components/footer/footer.component';
 })
 export class DetailPageComponent implements OnInit {
   /* Injections */
-  private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
+  private readonly _dayDetailService = inject(DayDetailService);
   private readonly _calendarService = inject(CalendarService);
   private readonly _fb = inject(FormBuilder);
   private readonly keyValuePipe = inject(KeyValuePipe);
@@ -30,13 +31,11 @@ export class DetailPageComponent implements OnInit {
   isLoading = this._calendarService.isLoading;
 
   /* Variables */
-  dayId: string = '';
   year: number = 0;
   monthName: string = '';
   monthNumber: number = 0;
   day: number = 0;
   nameOfWeek: string = '';
-  dayDate: string = '';
   detailForm = this._fb.group({
     calories: [false],
     steps: [false],
@@ -68,7 +67,7 @@ export class DetailPageComponent implements OnInit {
     effect(() => {
       const detailDate = this.dayDetail()?.date
         ? this.dayDetail()!.date
-        : new Date(this.dayDate);
+        : new Date(this._dayDetailService.dayDateVal());
       this.year = detailDate!.getFullYear();
       this.monthNumber = detailDate!.getMonth();
       this.monthName = getMonthNameByNumber(this.monthNumber);
@@ -79,12 +78,7 @@ export class DetailPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dayId = this._route.snapshot.paramMap.get('dayId') || '';
-    const paramDayDate = this._route.snapshot.paramMap.get('dayDate') || '';
-    if (paramDayDate) {
-      this.dayDate = paramDayDate;
-    }
-    this._calendarService.getDayDetails(this.dayId);
+    this._calendarService.getDayDetails(this._dayDetailService.dayIdVal());
   }
 
   onToggleCheck(taskName: string): void {
@@ -96,7 +90,7 @@ export class DetailPageComponent implements OnInit {
     const updatedDay: DetailDayEntity = {
       date: this.dayDetail()?.date
         ? getDateString(this.dayDetail()!.date!)
-        : this.dayDate,
+        : this._dayDetailService.dayDateVal(),
       tasks: {
         steps: this.detailForm.get('steps')?.value || false,
         calories: this.detailForm.get('calories')?.value || false,
@@ -106,13 +100,13 @@ export class DetailPageComponent implements OnInit {
       },
       weightNumber: this.detailForm.get('weightNumber')?.value || null,
     };
-    if (this.dayId) {
-      updatedDay.id = this.dayId;
+    if (this._dayDetailService.dayIdVal()) {
+      updatedDay.id = this._dayDetailService.dayIdVal();
       this._calendarService
         .updateDayDetail(
           this.year,
           this.monthNumber + 1,
-          this.dayId,
+          this._dayDetailService.dayIdVal(),
           updatedDay
         )
         .subscribe({

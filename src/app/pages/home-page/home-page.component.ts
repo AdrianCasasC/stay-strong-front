@@ -16,6 +16,6 @@ export class HomePageComponent {
   private readonly _router = inject(Router);
 
   onSelectDay({ dayId, dayDate }: { dayId: string; dayDate: Date }): void {
-    this._router.navigate(['details/detail', dayId, getDateString(dayDate)]);
+    this._router.navigate(['details', dayId, getDateString(dayDate)]);
   }
 }

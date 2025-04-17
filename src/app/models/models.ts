@@ -68,4 +68,4 @@ export interface Exercise {
   series: Serie[];
 }
 
-export type FooterTab = 'home' | 'detail' | 'training';
+export type FooterTab = 'home' | 'list' | 'training';

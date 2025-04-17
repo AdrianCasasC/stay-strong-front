@@ -1,7 +1,6 @@
 <ul class="w-full h-full flex justify-between items-center">
   @for (tab of tabs; track $index) {
   <li
-    [routerLink]="tab === 'home' ? '/home' : '/details/' + tab + '/' + dayId()"
     class="h-full w-full centered"
     [class.bg-[#5d4ccb]]="tab === selectedTab"
     (click)="onSelectTab(tab)"

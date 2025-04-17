@@ -9,14 +9,14 @@ export const DETAILS_ROUTES: Routes = [
       ),
     children: [
       {
-        path: 'detail/:dayId/:dayDate',
+        path: 'list',
         loadComponent: () =>
           import('../pages/detail-page/detail-page.component').then(
             (m) => m.DetailPageComponent
           ),
       },
       {
-        path: 'training/:dayId',
+        path: 'training',
         loadComponent: () =>
           import('../pages/training-page/training-page.component').then(
             (m) => m.TrainingPageComponent
