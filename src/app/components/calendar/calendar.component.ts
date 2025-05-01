@@ -36,7 +36,8 @@ export class CalendarComponent implements OnInit {
   prevMonthDays: MonthDay[] = [];
   nextMonthDays: MonthDay[] = [];
   calendar = this._calendarService.calendar;
-  isLoading = this._calendarService.isLoading;
+  currentYear = this.today().getFullYear();
+  currentMonth = this.today().getMonth();
 
   /* Variables */
   daysInCurrentMonth: number = 0;
@@ -56,15 +57,15 @@ export class CalendarComponent implements OnInit {
   }
 
   private initMonthDays(): void {
-    this.daysInCurrentMonth = this.getDaysInMonth(this.today().getMonth());
-    if (this.today().getMonth() === 0) {
+    this.daysInCurrentMonth = this.getDaysInMonth(this.currentMonth);
+    if (this.currentMonth === 0) {
       this.daysInPreviousMonth = this.getDaysInMonth(
         11,
         this.today().getFullYear() - 1
       );
     } else {
       this.daysInPreviousMonth = this.getDaysInMonth(
-        this.today().getMonth() === 0 ? 11 : this.today().getMonth() - 1
+        this.currentMonth === 0 ? 11 : this.currentMonth - 1
       );
     }
   }
@@ -74,20 +75,20 @@ export class CalendarComponent implements OnInit {
     for (let i = 1; i < currentMonthFirstDayWeekNumber; i++) {
       const day: MonthDay = {
         date: new Date(
-          this.today().getMonth() === 0
+          this.currentMonth === 0
             ? this.today().getFullYear() - 1
             : this.today().getFullYear(),
-          this.today().getMonth() === 0 ? 11 : this.today().getMonth() - 1,
+          this.currentMonth === 0 ? 11 : this.currentMonth - 1,
           this.daysInPreviousMonth - currentMonthFirstDayWeekNumber + i + 1
         ),
         weekNumber: i,
         monthNumber:
           this.daysInPreviousMonth - currentMonthFirstDayWeekNumber + i + 1,
         name: getNameOfWeek(
-          this.today().getMonth() === 0
+          this.currentMonth === 0
             ? this.today().getFullYear() - 1
             : this.today().getFullYear(),
-          this.today().getMonth() === 0 ? 11 : this.today().getMonth() - 1,
+          this.currentMonth === 0 ? 11 : this.currentMonth - 1,
           this.daysInPreviousMonth - currentMonthFirstDayWeekNumber + i + 1
         ),
         isToday: false,
@@ -106,19 +107,19 @@ export class CalendarComponent implements OnInit {
     for (let i = 1; i <= DAYS_IN_WEEK - currentMonthLastDayWeekNumber; i++) {
       const day: MonthDay = {
         date: new Date(
-          this.today().getMonth() === 11
+          this.currentMonth === 11
             ? this.today().getFullYear() + 1
             : this.today().getFullYear(),
-          this.today().getMonth() === 11 ? 0 : this.today().getMonth() + 1,
+          this.currentMonth === 11 ? 0 : this.currentMonth + 1,
           i
         ),
         weekNumber: currentMonthLastDayWeekNumber + i,
         monthNumber: i,
         name: getNameOfWeek(
-          this.today().getMonth() === 11
+          this.currentMonth === 11
             ? this.today().getFullYear() + 1
             : this.today().getFullYear(),
-          this.today().getMonth() === 11 ? 0 : this.today().getMonth() + 1,
+          this.currentMonth === 11 ? 0 : this.currentMonth + 1,
           i
         ),
         isToday: false,
@@ -132,23 +133,23 @@ export class CalendarComponent implements OnInit {
   }
 
   private initCalendarGrid(): void {
-    this._calendarService.getCalendar({ year: 2025, month: 4 });
+    this._calendarService.getCalendar({ year: this.currentYear, month: this.currentMonth + 1 });
     for (let i = 0; i < this.daysInCurrentMonth; i++) {
       const day: MonthDay = {
         date: new Date(
           this.today().getFullYear(),
-          this.today().getMonth(),
+          this.currentMonth,
           i + 1
         ),
         weekNumber: getDayOfWeek(
           this.today().getFullYear(),
-          this.today().getMonth(),
+          this.currentMonth,
           i + 1
         ),
         monthNumber: i + 1,
         name: getNameOfWeek(
           this.today().getFullYear(),
-          this.today().getMonth(),
+          this.currentMonth,
           i + 1
         ),
         isToday: this.today().getDate() === i + 1,
@@ -159,6 +160,19 @@ export class CalendarComponent implements OnInit {
 
       this.monthDays.push(day);
     }
+  }
+
+  private resetMonthDays(): void {
+    this.monthDays = [];
+    this.prevMonthDays = [];
+    this.nextMonthDays = [];
+  }
+
+  private initAll(): void {
+    this.initMonthDays();
+    this.initCalendarGrid();
+    this.initPrevMonthDays();
+    this.initNextMonthDays();
   }
 
   constructor() {
@@ -205,10 +219,7 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.initMonthDays();
-    this.initCalendarGrid();
-    this.initPrevMonthDays();
-    this.initNextMonthDays();
+    this.initAll();
   }
 
   getMonthByNumber(monthNumber: number): string {
@@ -217,5 +228,23 @@ export class CalendarComponent implements OnInit {
 
   onSelectDay(detailDayParams: { dayId: string; dayDate: Date }): void {
     this.selectDay.emit(detailDayParams);
+  }
+
+  prevMonth(): void {
+    this.currentMonth = this.currentMonth === 0 ? 11 : this.currentMonth - 1;
+    if (this.currentMonth === 11) {
+      this.currentYear = this.currentYear - 1;
+    }
+    this.resetMonthDays();
+    this.initAll();
+  }
+
+  nextMonth(): void {
+    this.currentMonth = this.currentMonth === 11 ? 1 : this.currentMonth + 1;
+    if (this.currentMonth === 1) {
+      this.currentYear = this.currentYear + 1;
+    }
+    this.resetMonthDays();
+    this.initAll();
   }
 }

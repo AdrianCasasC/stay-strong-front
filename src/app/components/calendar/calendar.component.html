@@ -1,20 +1,20 @@
-<h1 class="text-red-200 text-center">{{ today().getFullYear() }}</h1>
-<h2 class="text-center">
-  {{ today().getDate() }} de
-  {{ getMonthByNumber(today().getMonth()) }}
-</h2>
+<div class="flex justify-between items-center w-full">
+  <span class="ml-6 w-[24px] h-[24px] centered cursor-pointer rounded-full border-2 border-[#ddddff]" (click)="prevMonth()">
+    <img class="w-full h-full" src="../../../assets/svgs/arrow.svg" alt="arrow-left" />
+  </span>
+  <h1 class="text-center text-2xl font-bold text-gray-700 mb-4 mt-4">
+    {{ getMonthByNumber(currentMonth) }} de {{ currentYear }}
+  </h1>
+  <span class="mr-6 w-[24px] h-[24px] centered cursor-pointer rounded-full border-2 border-[#ddddff] rotate-180" (click)="nextMonth()">
+    <img class="w-full h-full" src="../../../assets/svgs/arrow.svg" alt="arrow-left" />
+  </span>
+</div>
+
 
 <div
   class="w-full h-full border-2 rounded-sm p-4 grid grid-cols-7 grid-rows-7 gap-2"
 >
-  @if (isLoading()) {
-  <div class="left-0 top-0 w-full h-full centered absolute">
-    <img
-      src="../../../assets/svgs/loader.svg"
-      class="w-10 h-10 absolute top-[20%] spin"
-    />
-  </div>
-  } @for (day of week_days; track $index) {
+   @for (day of week_days; track $index) {
   <span class="col-span-1 p-1 bg-[#ddddff] max-[630px]:hidden">{{
     day.name
   }}</span>
@@ -25,7 +25,7 @@
   >
   } @for (day of prevMonthDays; track $index) {
   <div
-    [class.bg-red-300]="today().getDate() === day.monthNumber"
+  [class.bg-red-300]="today().getDate() === day.monthNumber && today().getMonth() === day.date.getMonth() && today().getFullYear() === day.date.getFullYear()"
     class="col-span-1 bg-gray-300 opacity-50 p-1 text-xs relative"
     (click)="onSelectDay({ dayId: day.id || '', dayDate: day.date })"
   >
@@ -49,7 +49,7 @@
   </div>
   } @for (day of monthDays; let i = $index; track i) {
   <div
-    [class.bg-red-300]="today().getDate() === day.monthNumber"
+    [class.bg-red-300]="today().getDate() === day.monthNumber && today().getMonth() === day.date.getMonth() && today().getFullYear() === day.date.getFullYear()"
     class="col-span-1 p-1 text-xs relative"
     (click)="onSelectDay({ dayId: day.id || '', dayDate: day.date })"
   >
@@ -74,7 +74,7 @@
 
   } @for (day of nextMonthDays; track $index) {
   <div
-    [class.bg-red-300]="today().getDate() === day.monthNumber"
+  [class.bg-red-300]="today().getDate() === day.monthNumber && today().getMonth() === day.date.getMonth() && today().getFullYear() === day.date.getFullYear()"
     class="col-span-1 bg-gray-300 opacity-50 p-1 text-xs"
     (click)="onSelectDay({ dayId: day.id || '', dayDate: day.date })"
   >

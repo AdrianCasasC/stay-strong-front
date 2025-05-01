@@ -1,3 +1,16 @@
+@if (isLoading()) {
+    <div class="fixed top-0 left-0 w-screen h-screen bg-slate-950 opacity-50 z-10 centered">
+        <div class="left-0 top-0 w-[64px] h-[64px] centered">
+            <img
+            src="../../../assets/svgs/loader.svg"
+            class="w-full h-full spin"
+            />
+        </div>
+    
+    </div>
+    }
+
+
 <app-calendar (selectDay)="onSelectDay($event)"></app-calendar>
 
 <app-graph class="mt-16 block"></app-graph>
