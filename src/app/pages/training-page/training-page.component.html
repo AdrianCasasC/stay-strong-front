@@ -2,6 +2,10 @@
 
 <button (click)="onOpenExerciseModal()">Añadir ejercicio</button>
 
+
+<input type="file" accept="application/pdf" name="file" (change)="onFileChange($event)" />
+<button [disabled]="!selectedFile" (click)="uploadFile()">Upload PDF</button>
+
 @if (exercises().length) { @for (exercise of exercises(); track $index) {
 <div>
   <h2>{{ exercise.name }}</h2>

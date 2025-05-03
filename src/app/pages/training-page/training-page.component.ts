@@ -25,7 +25,7 @@ export class TrainingPageComponent implements OnInit {
   dayIdVal = this._dayDetailService.dayIdVal;
 
   /* Variables */
-
+  selectedFile: File | null = null;
   trainingName = 'Pierna';
   showExerciseModal = false;
   draftExercises: Exercise[] = [];
@@ -48,5 +48,28 @@ export class TrainingPageComponent implements OnInit {
       .subscribe({
         next: () => this._router.navigateByUrl('/home'),
       });
+  }
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      if (file.type === 'application/pdf') {
+        this.selectedFile = file;
+      } else {
+        alert('Only PDF files are allowed');
+        this.selectedFile = null;
+      }
+    }
+    
+  }
+
+  uploadFile(): void {
+    if (!this.selectedFile) return;
+
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+
+    this._trainingService.getExercisesTable(formData);
   }
 }
