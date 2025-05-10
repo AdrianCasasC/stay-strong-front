@@ -32,6 +32,7 @@ export class TrainingPageComponent implements OnInit {
   selectedFile: File | null = null;
   trainingName = 'Pierna';
   showExerciseModal = false;
+  isEditing = false;
   draftExercises: Exercise[] = [];
 
   /* Form */
@@ -68,6 +69,18 @@ export class TrainingPageComponent implements OnInit {
       .subscribe({
         next: () => this._router.navigateByUrl('/home'),
       });
+  }
+
+  onCloseModal(): void {
+    this.showExerciseModal = false;
+  }
+
+  onEditExercises(): void {
+    this.isEditing = true;
+  }
+
+  onConfirmEditing(): void {
+    this.isEditing = false;
   }
 
   onFileChange(event: Event): void {

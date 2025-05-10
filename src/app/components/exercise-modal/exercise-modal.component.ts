@@ -15,6 +15,7 @@ export class ExerciseModalComponent {
 
   /* Outputs */
   onSaveExercise = output<Exercise>();
+  closeModal = output<void>();
 
   exerciseForm = this._fb.group({
     name: ['', Validators.required],
@@ -34,5 +35,9 @@ export class ExerciseModalComponent {
       console.log('Saved exercise: ', exercise)
       this.onSaveExercise.emit(exercise);
     }
+  }
+
+  onCloseModal(): void {
+    this.closeModal.emit();
   }
 }

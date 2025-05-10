@@ -1,25 +1,39 @@
 
-<div class="w-screen h-screen flex flex-col p-6">
+<div class="w-screen h-[calc(100vh-64px)] flex flex-col justify-between p-6 text-center">
 
   @if (exercises()?.length) { 
-    <h1 class="text-3xl font-bold">Entrenamiento {{ trainingName }}</h1>
-    <button (click)="onOpenExerciseModal()" class="mt-12 w-full rounded-3xl p-4 cursor-pointer bg-green-400 text-white text-2xl">Añadir ejercicio</button>
-    @for (exercise of exercises(); track $index) {
-      <div>
-        <h2>{{ exercise.name }}</h2>
-        @for (serie of exercise.series; let i = $index; track i) {
-        <div>
-          <span>Serie {{ i + 1 }}</span>
-          <div>
-            <label for="repetitions"></label>
-            <input type="number" name="repetitions" />
-            <label for="weight"></label>
-            <input type="number" name="weight" />
-            <span>Repeticiones: {{ serie.repetitions }}</span>
-            <span>Peso: {{ serie.weight }}</span>
+    <h1 class="text-3xl font-bold mb-6">Entrenamiento {{ trainingName }}</h1>
+    
+    <section class="w-[calc(100% + 48px)] h-full overflow-scroll -ml-6 -mr-6">
+      @for (exercise of exercises(); track $index) {
+        <div class="mb-6">
+          <h2 class="w-full text-xl font-bold text-white mb-1 p-2 bg-gradient-to-r from-[#6423f7] to-white text-center">{{ exercise.name }}</h2>
+          @for (serie of exercise.series; let i = $index; track i) {
+          <div class="mb-3 flex flex-col items-center">
+            <span class="block w-full px-3 pb-1 text-center mb-2 border-b-2 font-bold border-[#6423f7]">Serie {{ i + 1 }}</span>
+            <div class="w-1/2 flex justify-between mb-1 px-3">
+              @if (isEditing) {
+                <label for="repetitions"></label>
+                <input type="number" name="repetitions" />
+                <label for="weight"></label>
+                <input type="number" name="weight" />
+              } @else {
+                <span>Reps: {{ serie.repetitions }}</span>
+                <span class="text-[#6423f7]">X</span>
+                <span>Peso: {{ serie.weight }}</span>
+              }
+            </div>
           </div>
+          }
         </div>
-        }
+      }
+    </section>
+    @if (isEditing) {
+      <button (click)="onConfirmEditing()" class="mt-12 w-full rounded-3xl p-4 cursor-pointer bg-green-400 text-white text-2xl">Confirmar</button>
+    } @else {
+        <div class="w-full flex gap-3 mb-4">
+        <button (click)="onOpenExerciseModal()" class="mt-12 w-full rounded-3xl p-4 cursor-pointer bg-green-400 text-white text-2xl">Añadir</button>
+        <button (click)="onEditExercises()" class="mt-12 w-full rounded-3xl p-4 cursor-pointer bg-blue-400 text-white text-2xl">Editar</button>
       </div>
     }
   } @else { 
@@ -49,5 +63,6 @@
 @if (showExerciseModal) {
   <app-exercise-modal
     (onSaveExercise)="onSaveExercise($event)"
+    (closeModal)="onCloseModal()"
   ></app-exercise-modal>
 }
