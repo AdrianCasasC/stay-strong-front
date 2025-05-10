@@ -99,6 +99,7 @@ export class CalendarService extends RequestService {
                 weight: false,
               },
               weightNumber: null,
+              exercises: []
             }) as any
         ),
         finalize(() => (this.loading = false))

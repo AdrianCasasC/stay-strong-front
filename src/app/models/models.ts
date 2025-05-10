@@ -27,6 +27,7 @@ export interface DetailDay {
   date: Date | null;
   tasks: DayTask;
   weightNumber: number | null;
+  exercises: Exercise[] | null;
 }
 
 export interface DetailDayEntity {
@@ -34,6 +35,7 @@ export interface DetailDayEntity {
   date: string;
   tasks: DayTask;
   weightNumber: number | null;
+  exercises: Exercise[] | null;
 }
 
 export interface Calendar {

@@ -1,10 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { ExerciseModalComponent } from '../../components/exercise-modal/exercise-modal.component';
 import { Exercise } from '../../models/models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TrainingService } from '../../services/training.service';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { DayDetailService } from '../../services/day-detail.service';
+import { CalendarService } from '../../services/calendar.service';
+import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-training-page',
@@ -18,10 +20,12 @@ export class TrainingPageComponent implements OnInit {
   private readonly _router = inject(Router);
   private readonly _dayDetailService = inject(DayDetailService);
   private readonly _trainingService = inject(TrainingService);
+  private readonly _calendarService = inject(CalendarService);
+  private readonly _fb = inject(FormBuilder);
 
   /* Signals */
-  exercises = this._trainingService.exercises;
-
+  dayDetail = this._calendarService.dayDetail;
+  exercises = computed(() => this.dayDetail()?.exercises)
   dayIdVal = this._dayDetailService.dayIdVal;
 
   /* Variables */
@@ -29,6 +33,21 @@ export class TrainingPageComponent implements OnInit {
   trainingName = 'Pierna';
   showExerciseModal = false;
   draftExercises: Exercise[] = [];
+
+  /* Form */
+  seriesForm = this._fb.group({
+    repetitions: [0, Validators.min(1)],
+    weight: [0]
+  });
+
+  exerciseForm = this._fb.group({
+    name: ['', Validators.required],
+    series: this._fb.array([])
+  });
+
+  trainingForm = this._fb.group({
+    exercises: this._fb.array([])
+  });
 
   ngOnInit(): void {
     this._trainingService.getDayExercises(this.dayIdVal());
@@ -40,6 +59,7 @@ export class TrainingPageComponent implements OnInit {
 
   onSaveExercise(exercise: Exercise): void {
     this.draftExercises.push(exercise);
+    this.showExerciseModal = false;
   }
 
   onSaveTraining(): void {
@@ -62,14 +82,5 @@ export class TrainingPageComponent implements OnInit {
       }
     }
     
-  }
-
-  uploadFile(): void {
-    if (!this.selectedFile) return;
-
-    const formData = new FormData();
-    formData.append('file', this.selectedFile);
-
-    this._trainingService.getExercisesTable(formData);
   }
 }

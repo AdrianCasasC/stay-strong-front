@@ -99,6 +99,7 @@ export class DetailPageComponent implements OnInit {
         weight: this.detailForm.get('weight')?.value || false,
       },
       weightNumber: this.detailForm.get('weightNumber')?.value || null,
+      exercises: null
     };
     if (this._dayDetailService.dayIdVal()) {
       updatedDay.id = this._dayDetailService.dayIdVal();

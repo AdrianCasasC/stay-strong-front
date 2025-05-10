@@ -1,43 +1,53 @@
-<h1>Entrenamiento {{ trainingName }}</h1>
 
-<button (click)="onOpenExerciseModal()">Añadir ejercicio</button>
+<div class="w-screen h-screen flex flex-col p-6">
 
-
-<input type="file" accept="application/pdf" name="file" (change)="onFileChange($event)" />
-<button [disabled]="!selectedFile" (click)="uploadFile()">Upload PDF</button>
-
-@if (exercises().length) { @for (exercise of exercises(); track $index) {
-<div>
-  <h2>{{ exercise.name }}</h2>
-  @for (serie of exercise.series; let i = $index; track i) {
-  <div>
-    <span>Serie {{ i + 1 }}</span>
-    <div>
-      <span>Repeticiones: {{ serie.repetitions }}</span>
-      <span>Peso: {{ serie.weight }}</span>
-    </div>
-  </div>
+  @if (exercises()?.length) { 
+    <h1 class="text-3xl font-bold">Entrenamiento {{ trainingName }}</h1>
+    <button (click)="onOpenExerciseModal()" class="mt-12 w-full rounded-3xl p-4 cursor-pointer bg-green-400 text-white text-2xl">Añadir ejercicio</button>
+    @for (exercise of exercises(); track $index) {
+      <div>
+        <h2>{{ exercise.name }}</h2>
+        @for (serie of exercise.series; let i = $index; track i) {
+        <div>
+          <span>Serie {{ i + 1 }}</span>
+          <div>
+            <label for="repetitions"></label>
+            <input type="number" name="repetitions" />
+            <label for="weight"></label>
+            <input type="number" name="weight" />
+            <span>Repeticiones: {{ serie.repetitions }}</span>
+            <span>Peso: {{ serie.weight }}</span>
+          </div>
+        </div>
+        }
+      </div>
+    }
+  } @else { 
+    <h2 class="text-2xl font-bold text-center mb-3">Aun no tienes ejercicios ¡Añádelos ahora!</h2>
+    <button (click)="onOpenExerciseModal()" class="mt-12 w-full rounded-3xl p-4 cursor-pointer bg-green-400 text-white text-2xl">Añadir ejercicio</button>
+    @for (exercise of draftExercises; track $index) {
+      <div>
+        <h2>{{ exercise.name }}</h2>
+        @for (serie of exercise.series; let i = $index; track i) {
+        <div>
+          <span>Serie {{ i + 1 }}</span>
+          <div>
+            <label for="repetitions"></label>
+            <input type="number" name="repetitions" />
+            <label for="weight"></label>
+            <input type="number" name="weight" />
+          </div>
+        </div>
+        }
+      </div>
+    }
   }
+  
+  <button (click)="onSaveTraining()">Guardar Entrenamiento</button>
 </div>
-} }@else { @for (exercise of draftExercises; track $index) {
-<div>
-  <h2>{{ exercise.name }}</h2>
-  @for (serie of exercise.series; let i = $index; track i) {
-  <div>
-    <span>Serie {{ i + 1 }}</span>
-    <div>
-      <span>Repeticiones: {{ serie.repetitions }}</span>
-      <span>Peso: {{ serie.weight }}</span>
-    </div>
-  </div>
-  }
-</div>
-} }
-
-<button (click)="onSaveTraining()">Guardar Entrenamiento</button>
 
 @if (showExerciseModal) {
-<app-exercise-modal
-  (onSaveExercise)="onSaveExercise($event)"
-></app-exercise-modal>
+  <app-exercise-modal
+    (onSaveExercise)="onSaveExercise($event)"
+  ></app-exercise-modal>
 }

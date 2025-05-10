@@ -71,6 +71,7 @@ export class TrainingService extends RequestService {
 
   tableTransformer(tableData: any[]): any {
     const transformedData: TableData[] = [];
+    console.log("TABLE DATA: ", tableData);
     tableData.shift();
     console.log("Table data - 1: ", tableData);
     tableData = tableData.shift();
@@ -83,7 +84,8 @@ export class TrainingService extends RequestService {
     const formattedTableData: TableData = this.defaultFormattedTableData;
     const formattedTableDay: TableDataDay = this.defaultTableDay;
     const formattedTableExercise: TableDayExercise = this.defaultTableExercise;
-    return tableData.forEach(object => {
+    const table: any[] =  [];
+    tableData.forEach(object => {
       let daysCount = 0;
       let weeksCount = 0;
       if (object['Unnamed: 0'] === 'DÍA') {
@@ -91,26 +93,72 @@ export class TrainingService extends RequestService {
         formattedTableDay.dayNumber = daysCount;
         return;
       }
-      const patterns = object['Unnamed: 1'] !== null ? object['Unnamed: 1'].split('\r') : []
-      const names = object['Unnamed: 2'] !== null ? object['Unnamed: 2'].split('\r') : []
-      const rests = object['Unnamed: 4'] !== null ? object['Unnamed: 4'].split('\r') : []
-      const reps = object['Unnamed: 5'] !== null ? object['Unnamed: 5'].split('\r') : []
-      const sets_rep_weight = object['LIGERA'] !== null ? object['LIGERA'].split('\r') : []
-     
-      const exercises: TableDayExercise[] = [];
-      for (let i = 0; i < patterns.length; i++) {
-        exercises.push({
-          pattern: patterns[i],
-          name: names[i],
-          RM: i === 0 ? object['Unnamed: 3'] : null,
-          rest: rests[i],
-          reps: reps[i],
-          sets: null,
-          rep: null,
-          weight: null
+      const weeks = [];
+      for (let week = 0; week < cicleWeekDuration; week++) {
+        const patterns = object['Unnamed: 1'] !== null ? object['Unnamed: 1'].split('\r') : []
+        const names = object['Unnamed: 2'] !== null ? object['Unnamed: 2'].split('\r') : []
+        const rests = object['Unnamed: 4'] !== null ? object['Unnamed: 4'].split('\r') : []
+        const reps = object['Unnamed: 5'] !== null ? object['Unnamed: 5'].split('\r') : []
+        
+        const keys = Object.keys(object);
+        const weekCase = keys[week + cicleWeekDuration + 1];
+        let sets_rep_weight = object[weekCase] !== null ? object[weekCase].split('\r') : [];
+        console.log("weekCase: ", weekCase);
+        console.log("sets_rep_weight: ", sets_rep_weight);
+        if (sets_rep_weight.length > 1) {
+
+          if (sets_rep_weight[1].includes("RM")) {
+            sets_rep_weight[1] = sets_rep_weight[1].replace("RM", "RMx")
+          }
+          const [first, second, ...rest] = sets_rep_weight;
+          const first_second = first.charAt(first.length - 1) === 'x' ? [first.charAt(0), second].join('x') : [first, second].join('x');
+          sets_rep_weight = [first_second, ...rest];
+        }
+        
+        console.log("sets_rep_weight: ", sets_rep_weight);
+        console.log("sets_rep_weight length: ", sets_rep_weight.length);
+        console.log("patterns: ", patterns);
+        console.log("patterns length: ", patterns.length);
+        const exercises: TableDayExercise[] = [];
+        for (let i = 0; i < sets_rep_weight.length; i++) {
+          
+          const splitted_set_rep_weight = sets_rep_weight[i].split('x');
+          console.log("splitted_set_rep_weight: ", splitted_set_rep_weight);
+          let rep;
+          let weight;
+          if (sets_rep_weight[0].includes('-')) {
+            rep = splitted_set_rep_weight[1];
+            weight = splitted_set_rep_weight[2];
+          } else {
+            const rep_weight = splitted_set_rep_weight[1];
+            const [repFirst, ...weightRest] = rep_weight;
+            rep = repFirst;
+            weight = weightRest;
+          }
+          console.log("rep: ", rep);
+          console.log("weight: ", weight);
+
+          exercises.push({
+            pattern: patterns[i],
+            name: names[i],
+            RM: i === 0 ? object['Unnamed: 3'] : null,
+            rest: rests[i],
+            reps: reps[i],
+            sets: splitted_set_rep_weight[0],
+            rep,
+            weight: weight
+          })
+        }
+        weeks.push({
+          weekNumber: week,
+          days: exercises
         })
+        console.log("Exercises: ", exercises);
+        console.log("Weeks: ", weeks);
+        
       }
-      console.log("Exercises: ", exercises);
+      table.push(weeks)
+      console.log("Table: ", table);
     });
   }
 }
