@@ -1,17 +1,16 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, OnInit } from '@angular/core';
 import { ExerciseModalComponent } from '../../components/exercise-modal/exercise-modal.component';
-import { Exercise } from '../../models/models';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Exercise, Serie } from '../../models/models';
+import { Router } from '@angular/router';
 import { TrainingService } from '../../services/training.service';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { DayDetailService } from '../../services/day-detail.service';
 import { CalendarService } from '../../services/calendar.service';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-training-page',
   standalone: true,
-  imports: [ExerciseModalComponent, FooterComponent],
+  imports: [ExerciseModalComponent, ReactiveFormsModule],
   templateUrl: './training-page.component.html',
   styleUrl: './training-page.component.scss',
 })
@@ -49,6 +48,43 @@ export class TrainingPageComponent implements OnInit {
   trainingForm = this._fb.group({
     exercises: this._fb.array([])
   });
+  
+  get formExercises(): FormArray {
+    return this.trainingForm.get('exercises') as FormArray;
+  }
+
+  getFormSeries(form: AbstractControl<any, any>): FormArray {
+    return form.get('series') as FormArray;
+  }
+
+  getFormGroup(form: AbstractControl<any, any>): FormGroup {
+    return form as FormGroup;
+  }
+
+  private getSeriesForm(serie: Serie): FormGroup {
+    return this._fb.group({
+      repetitions: [serie.repetitions, Validators.min(1)],
+      weight: [serie.weight]
+    });
+  }
+
+  private getExerciseForm(exercise: Exercise): FormGroup {
+    return this._fb.group({
+      name: [exercise.name, Validators.required],
+      series: this._fb.array(exercise.series.map(serie => this.getSeriesForm(serie)))
+    })
+  }
+  
+  private fillForm(exercises: Exercise[] | null | undefined): void {
+    if (!exercises) return;
+    exercises.forEach(exercise => {
+      this.formExercises.push(this.getExerciseForm(exercise))
+    });
+  }
+
+  constructor() {
+    effect(() => this.fillForm(this.exercises()))
+  }
 
   ngOnInit(): void {
     this._trainingService.getDayExercises(this.dayIdVal());

@@ -4,30 +4,37 @@
   @if (exercises()?.length) { 
     <h1 class="text-3xl font-bold mb-6">Entrenamiento {{ trainingName }}</h1>
     
-    <section class="w-[calc(100% + 48px)] h-full overflow-scroll -ml-6 -mr-6">
-      @for (exercise of exercises(); track $index) {
-        <div class="mb-6">
-          <h2 class="w-full text-xl font-bold text-white mb-1 p-2 bg-gradient-to-r from-[#6423f7] to-white text-center">{{ exercise.name }}</h2>
-          @for (serie of exercise.series; let i = $index; track i) {
+    <form [formGroup]="trainingForm" class="w-[calc(100% + 48px)] h-full overflow-scroll -ml-6 -mr-6">
+      @for (exercise of formExercises.controls; track $index) {
+        <form [formGroup]="getFormGroup(exercise)" class="mb-6">
+          <h2 class="w-full text-[28px] font-bold text-white mb-1 p-2 bg-gradient-to-r from-[#6423f7] to-white text-center">{{ exercise.value.name }}</h2>
+          @for (serie of getFormSeries(exercise).controls; let i = $index; track i) {
           <div class="mb-3 flex flex-col items-center">
-            <span class="block w-full px-3 pb-1 text-center mb-2 border-b-2 font-bold border-[#6423f7]">Serie {{ i + 1 }}</span>
-            <div class="w-1/2 flex justify-between mb-1 px-3">
-              @if (isEditing) {
-                <label for="repetitions"></label>
-                <input type="number" name="repetitions" />
-                <label for="weight"></label>
-                <input type="number" name="weight" />
+            <span class="block w-full px-3 pb-1 text-center text-[22px] mb-2 border-b-2 font-bold border-[#6423f7]">Serie {{ i + 1 }}</span>
+            @if (isEditing) {
+                <form [formGroup]="getFormGroup(serie)" class="w-1/2 flex items-center justify-between mb-1 px-3 text-xl">
+                  <div class="w-28 h-12 flex items-center">
+                    <label for="repetitions">Reps:</label>
+                    <input [formControlName]="'repetitions'" type="number" name="repetitions" class="p-2 w-20 rounded-xl border-2 border-blue-200 outline-[#6423f7]" />
+                  </div>
+                  <span class="text-[#6423f7]">X</span>
+                  <div class="w-28 h-12 flex items-center">
+                    <label for="weight">Peso:</label>
+                    <input [formControlName]="'weight'" type="number" name="weight" class="p-2 w-20 rounded-xl border-2 border-blue-200 outline-[#6423f7]" />
+                  </div>
+                </form>
               } @else {
-                <span>Reps: {{ serie.repetitions }}</span>
-                <span class="text-[#6423f7]">X</span>
-                <span>Peso: {{ serie.weight }}</span>
+                <div class="w-1/2 flex items-center justify-between mb-1 px-3 h-12 text-xl">
+                  <div class="w-28 h-12 flex items-center">Reps: <span class="ml-[10px]">{{ serie.value.repetitions }}</span></div>
+                  <span class="text-[#6423f7]">X</span>
+                  <div class="w-28 h-12 flex items-center">Peso: <span class="ml-[10px]">{{ serie.value.weight }}</span></div>
+                </div>
               }
-            </div>
           </div>
           }
-        </div>
+        </form>
       }
-    </section>
+    </form>
     @if (isEditing) {
       <button (click)="onConfirmEditing()" class="mt-12 w-full rounded-3xl p-4 cursor-pointer bg-green-400 text-white text-2xl">Confirmar</button>
     } @else {
