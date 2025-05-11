@@ -1,9 +1,11 @@
 
-<div class="w-screen h-[calc(100vh-64px)] flex flex-col justify-between p-6 text-center">
+<div class="w-screen h-[calc(100dvh-64px)] flex flex-col justify-between p-6 text-center">
 
-  @if (exercises()?.length) { 
+  @if (formExercises.controls.length) { 
     <h1 class="text-3xl font-bold mb-6">Entrenamiento {{ trainingName }}</h1>
-    
+  } @else { 
+    <h2 class="text-2xl font-bold text-center mb-3">Aun no tienes ejercicios ¡Añádelos ahora!</h2>
+  }
     <form [formGroup]="trainingForm" class="w-[calc(100% + 48px)] h-full overflow-scroll -ml-6 -mr-6">
       @for (exercise of formExercises.controls; track $index) {
         <form [formGroup]="getFormGroup(exercise)" class="mb-6">
@@ -12,22 +14,22 @@
           <div class="mb-3 flex flex-col items-center">
             <span class="block w-full px-3 pb-1 text-center text-[22px] mb-2 border-b-2 font-bold border-[#6423f7]">Serie {{ i + 1 }}</span>
             @if (isEditing) {
-                <form [formGroup]="getFormGroup(serie)" class="w-1/2 flex items-center justify-between mb-1 px-3 text-xl">
-                  <div class="w-28 h-12 flex items-center">
+                <form [formGroup]="getFormGroup(serie)" class="w-[90%] flex items-center justify-between mb-1 px-3 text-xl">
+                  <div class="w-[134px] h-12 flex items-center">
                     <label for="repetitions">Reps:</label>
-                    <input [formControlName]="'repetitions'" type="number" name="repetitions" class="p-2 w-20 rounded-xl border-2 border-blue-200 outline-[#6423f7]" />
+                    <input [formControlName]="'repetitions'" type="number" name="repetitions" class="p-2 w-20 text-right rounded-xl border-2 border-blue-200 outline-[#6423f7]" />
                   </div>
                   <span class="text-[#6423f7]">X</span>
-                  <div class="w-28 h-12 flex items-center">
+                  <div class="w-[134px] h-12 flex items-center">
                     <label for="weight">Peso:</label>
-                    <input [formControlName]="'weight'" type="number" name="weight" class="p-2 w-20 rounded-xl border-2 border-blue-200 outline-[#6423f7]" />
+                    <input [formControlName]="'weight'" type="number" name="weight" class="p-2 w-20 text-right rounded-xl border-2 border-blue-200 outline-[#6423f7]" />
                   </div>
                 </form>
               } @else {
-                <div class="w-1/2 flex items-center justify-between mb-1 px-3 h-12 text-xl">
-                  <div class="w-28 h-12 flex items-center">Reps: <span class="ml-[10px]">{{ serie.value.repetitions }}</span></div>
+                <div class="w-[90%] flex items-center justify-between mb-1 px-3 h-12 text-xl">
+                  <div class="w-[134px] h-12 flex items-center justify-between">Reps: <span class="w-full text-right mr-[12px]">{{ serie.value.repetitions }}</span></div>
                   <span class="text-[#6423f7]">X</span>
-                  <div class="w-28 h-12 flex items-center">Peso: <span class="ml-[10px]">{{ serie.value.weight }}</span></div>
+                  <div class="w-[134px] h-12 flex items-center justify-between">Peso: <span class="w-full text-right mr-[13px]">{{ serie.value.weight }}</span></div>
                 </div>
               }
           </div>
@@ -35,36 +37,16 @@
         </form>
       }
     </form>
+    <div class="w-full min-h-[116px] grid grid-cols-2 grid-rows-2 gap-3 mt-6">
     @if (isEditing) {
-      <button (click)="onConfirmEditing()" class="mt-12 w-full rounded-3xl p-4 cursor-pointer bg-green-400 text-white text-2xl">Confirmar</button>
+      <button (click)="onConfirmEditing()" class="col-span-2 row-span-2 m-3 rounded-3xl p-2 cursor-pointer bg-green-400 text-white text-2xl">Confirmar</button>
     } @else {
-        <div class="w-full flex gap-3 mb-4">
-        <button (click)="onOpenExerciseModal()" class="mt-12 w-full rounded-3xl p-4 cursor-pointer bg-green-400 text-white text-2xl">Añadir</button>
-        <button (click)="onEditExercises()" class="mt-12 w-full rounded-3xl p-4 cursor-pointer bg-blue-400 text-white text-2xl">Editar</button>
-      </div>
+      <button (click)="onOpenExerciseModal()" class="col-span-1 rounded-3xl p-2 cursor-pointer bg-[rgb(159,116,255)] text-white text-2xl">Añadir</button>
+      <button (click)="onEditExercises()" class="col-span-1 rounded-3xl p-2 cursor-pointer bg-white border-2 border-[rgb(159,116,255)] text-[rgb(159,116,255)] text-2xl">Editar</button>
+      <button (click)="onSaveTraining()" class="col-span-2 rounded-3xl p-2 cursor-pointer bg-green-400 text-white text-2xl">Guardar Entrenamiento</button>
     }
-  } @else { 
-    <h2 class="text-2xl font-bold text-center mb-3">Aun no tienes ejercicios ¡Añádelos ahora!</h2>
-    <button (click)="onOpenExerciseModal()" class="mt-12 w-full rounded-3xl p-4 cursor-pointer bg-green-400 text-white text-2xl">Añadir ejercicio</button>
-    @for (exercise of draftExercises; track $index) {
-      <div>
-        <h2>{{ exercise.name }}</h2>
-        @for (serie of exercise.series; let i = $index; track i) {
-        <div>
-          <span>Serie {{ i + 1 }}</span>
-          <div>
-            <label for="repetitions"></label>
-            <input type="number" name="repetitions" />
-            <label for="weight"></label>
-            <input type="number" name="weight" />
-          </div>
-        </div>
-        }
-      </div>
-    }
-  }
+    </div>
   
-  <button (click)="onSaveTraining()">Guardar Entrenamiento</button>
 </div>
 
 @if (showExerciseModal) {

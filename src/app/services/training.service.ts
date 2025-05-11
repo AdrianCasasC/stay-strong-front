@@ -38,13 +38,7 @@ export class TrainingService extends RequestService {
   }
 
   constructor(http: HttpClient) {
-    super(http, `${environment.apiUrl}/training`);
-  }
-
-  getDayExercises(dayId: string): Observable<Exercise[]> {
-    return this.get<Exercise[]>(`/${dayId}`).pipe(
-      tap((res) => this._exercises.set(res))
-    );
+    super(http, `${environment.apiUrl}/calendar/day-detail`);
   }
 
   getExercisesTable(file: FormData): any {
@@ -59,14 +53,14 @@ export class TrainingService extends RequestService {
     dayId: string,
     exercises: Exercise[]
   ): Observable<Exercise[]> {
-    return this.create<Exercise[]>(`/${dayId}`, exercises);
+    return this.create<Exercise[]>(`/${dayId}/training`, exercises);
   }
 
   updateDayExercise(
     dayId: string,
     exercises: Exercise[]
   ): Observable<Exercise[]> {
-    return this.update<Exercise[]>('', dayId, exercises);
+    return this.update<Exercise[]>('/training', dayId, exercises);
   }
 
   tableTransformer(tableData: any[]): any {

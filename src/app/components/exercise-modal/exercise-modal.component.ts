@@ -32,7 +32,6 @@ export class ExerciseModalComponent {
         name: this.exerciseForm.value.name!,
         series: Array.from({ length: this.exerciseForm.value.series! }, () => ({ repetitions: 0, weight: 0 }))
       }
-      console.log('Saved exercise: ', exercise)
       this.onSaveExercise.emit(exercise);
     }
   }

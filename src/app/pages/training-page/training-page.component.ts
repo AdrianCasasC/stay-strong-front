@@ -14,7 +14,7 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule
   templateUrl: './training-page.component.html',
   styleUrl: './training-page.component.scss',
 })
-export class TrainingPageComponent implements OnInit {
+export class TrainingPageComponent {
   /* Injections */
   private readonly _router = inject(Router);
   private readonly _dayDetailService = inject(DayDetailService);
@@ -32,7 +32,6 @@ export class TrainingPageComponent implements OnInit {
   trainingName = 'Pierna';
   showExerciseModal = false;
   isEditing = false;
-  draftExercises: Exercise[] = [];
 
   /* Form */
   seriesForm = this._fb.group({
@@ -83,11 +82,9 @@ export class TrainingPageComponent implements OnInit {
   }
 
   constructor() {
-    effect(() => this.fillForm(this.exercises()))
-  }
-
-  ngOnInit(): void {
-    this._trainingService.getDayExercises(this.dayIdVal());
+    effect(() => {
+      this.fillForm(this.exercises() || []);
+    });
   }
 
   onOpenExerciseModal(): void {
@@ -95,16 +92,16 @@ export class TrainingPageComponent implements OnInit {
   }
 
   onSaveExercise(exercise: Exercise): void {
-    this.draftExercises.push(exercise);
+    this.formExercises.push(this.getExerciseForm(exercise));
     this.showExerciseModal = false;
   }
 
   onSaveTraining(): void {
+    //if (!this.trainingForm.valid) return;
+    const exercises: Exercise[] = this.trainingForm.value.exercises as Exercise[];
     this._trainingService
-      .saveDayExercises(this.dayIdVal(), this.draftExercises)
-      .subscribe({
-        next: () => this._router.navigateByUrl('/home'),
-      });
+      .updateDayExercise(this.dayIdVal(), exercises)
+      .subscribe();
   }
 
   onCloseModal(): void {
