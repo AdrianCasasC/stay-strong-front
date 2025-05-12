@@ -1,8 +1,7 @@
-import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { CalendarService } from '../../services/calendar.service';
-import { CalendarWeight } from '../../models/models';
 
 @Component({
   selector: 'app-graph',
@@ -11,7 +10,7 @@ import { CalendarWeight } from '../../models/models';
   templateUrl: './graph.component.html',
   styleUrl: './graph.component.scss',
 })
-export class GraphComponent implements OnInit {
+export class GraphComponent implements OnInit, AfterViewInit {
   /* Injections */
   private readonly _calendarService = inject(CalendarService);
 
@@ -35,8 +34,8 @@ export class GraphComponent implements OnInit {
         data: [], // Income data
         label: 'Peso Corporal',
         fill: true, // Enable area fill
-        borderColor: 'rgba(0, 128, 0, 1)', // Solid green line
-        backgroundColor: 'rgba(0, 128, 0, 0.5)', // Green with 50% opacity
+        borderColor: 'rgba(0, 136, 180, 1)', // Solid green line
+        backgroundColor: '', // Green with 50% opacity
         tension: 0.4, // Smooth curve
         pointRadius: 5,
         pointHoverRadius: 7,
@@ -71,11 +70,25 @@ export class GraphComponent implements OnInit {
     this.lineChartData.datasets[0].data = this.calendarWeights().map(
       (d) => d.weight
     );
+    const chartRef = this.chart?.chart;
+    if (chartRef) {
+      const ctx = chartRef.ctx;
+      const gradient = ctx.createLinearGradient(0, 0, 0, chartRef.height);
+      gradient.addColorStop(0, 'rgba(0, 213, 155, 0.5)'); // Top
+      gradient.addColorStop(1, 'rgba(255, 255, 255, 0.5)');   // Bottom
+
+      const dataset = this.lineChartData.datasets[0];
+      dataset.backgroundColor = gradient;
+    }
     this.chart?.update();
   }
 
   constructor() {
     effect(() => this.initGraph());
+  }
+
+  ngAfterViewInit(): void {
+    throw new Error('Method not implemented.');
   }
 
   ngOnInit(): void {
