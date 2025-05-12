@@ -9,7 +9,7 @@
     <form [formGroup]="trainingForm" class="w-[calc(100% + 48px)] h-full overflow-scroll -ml-6 -mr-6">
       @for (exercise of formExercises.controls; track $index) {
         <form [formGroup]="getFormGroup(exercise)" class="mb-6">
-          <h2 class="w-full text-[28px] font-bold text-white mb-1 p-2 bg-gradient-to-r from-[#6423f7] to-white text-center">{{ exercise.value.name }}</h2>
+          <h2 class="w-full text-[28px] font-bold text-white mb-1 p-2 bg-gradient-to-r from-[#6423f7] to-[#c191ff] text-center">{{ exercise.value.name }}</h2>
           @for (serie of getFormSeries(exercise).controls; let i = $index; track i) {
           <div class="mb-3 flex flex-col items-center">
             <span class="block w-full px-3 pb-1 text-center text-[22px] mb-2 border-b-2 font-bold border-[#6423f7]">Serie {{ i + 1 }}</span>
@@ -49,9 +49,24 @@
   
 </div>
 
-@if (showExerciseModal) {
-  <app-exercise-modal
-    (onSaveExercise)="onSaveExercise($event)"
-    (closeModal)="onCloseModal()"
-  ></app-exercise-modal>
-}
+<ng-template #exerciseModal>
+  <form [formGroup]="exerciseModalForm" (ngSubmit)="onSubmit()" class="rounded-sm p-4 flex flex-col gap-3 bg-blue-400" >
+      <div class="w-full">
+          <label for="exerciseName" class="mb-2">Nombre:</label>
+          <input [formControlName]="'name'" type="text" name="exerciseName" class="w-full" />
+      </div>
+      <div class="w-full">
+          <label for="series" class="mb-2">Número de series:</label>
+          <input [formControlName]="'series'" type="number" name="series" class="w-full" />
+      </div>
+      <button type="submit">Guardar</button>
+  </form>
+</ng-template>
+
+<app-modal
+  [show]="showExerciseModal"
+  [showCloseIcon]="true"
+  [content]="exerciseModal"
+  (closeModal)="onCloseModal()"
+></app-modal>
+

@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, OnInit } from '@angular/core';
-import { ExerciseModalComponent } from '../../components/exercise-modal/exercise-modal.component';
+import { ModalComponent } from '../../components/modal/modal.component';
 import { Exercise, Serie } from '../../models/models';
 import { Router } from '@angular/router';
 import { TrainingService } from '../../services/training.service';
@@ -10,7 +10,7 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule
 @Component({
   selector: 'app-training-page',
   standalone: true,
-  imports: [ExerciseModalComponent, ReactiveFormsModule],
+  imports: [ModalComponent, ReactiveFormsModule],
   templateUrl: './training-page.component.html',
   styleUrl: './training-page.component.scss',
 })
@@ -47,6 +47,12 @@ export class TrainingPageComponent {
   trainingForm = this._fb.group({
     exercises: this._fb.array([])
   });
+
+  /* Modal Form */
+  exerciseModalForm = this._fb.group({
+    name: ['', Validators.required],
+    series: [0, Validators.min(1)]
+  })
   
   get formExercises(): FormArray {
     return this.trainingForm.get('exercises') as FormArray;
@@ -127,6 +133,16 @@ export class TrainingPageComponent {
         this.selectedFile = null;
       }
     }
-    
+  }
+
+  /* Modal Methods */
+  onSubmit(): void {
+    if (this.exerciseModalForm.valid) {
+      const exercise: Exercise = {
+        name: this.exerciseModalForm.value.name!,
+        series: Array.from({ length: this.exerciseModalForm.value.series! }, () => ({ repetitions: 0, weight: 0 }))
+      }
+      this.onSaveExercise(exercise);
+    }
   }
 }
