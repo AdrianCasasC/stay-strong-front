@@ -51,7 +51,7 @@ export class TrainingPageComponent {
   /* Modal Form */
   exerciseModalForm = this._fb.group({
     name: ['', Validators.required],
-    series: [0, Validators.min(1)]
+    series: [null, [Validators.required, Validators.min(1), Validators.max(10)]]
   })
   
   get formExercises(): FormArray {
@@ -115,34 +115,24 @@ export class TrainingPageComponent {
   }
 
   onEditExercises(): void {
-    this.isEditing = true;
+    if (this.formExercises.controls.length) {
+      this.isEditing = true;
+    }
   }
 
   onConfirmEditing(): void {
     this.isEditing = false;
   }
 
-  onFileChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      if (file.type === 'application/pdf') {
-        this.selectedFile = file;
-      } else {
-        alert('Only PDF files are allowed');
-        this.selectedFile = null;
-      }
-    }
-  }
-
   /* Modal Methods */
   onSubmit(): void {
-    if (this.exerciseModalForm.valid) {
-      const exercise: Exercise = {
-        name: this.exerciseModalForm.value.name!,
-        series: Array.from({ length: this.exerciseModalForm.value.series! }, () => ({ repetitions: 0, weight: 0 }))
-      }
-      this.onSaveExercise(exercise);
+    if (!this.exerciseModalForm.valid) return;
+    const exercise: Exercise = {
+      name: this.exerciseModalForm.value.name!,
+      series: Array.from({ length: this.exerciseModalForm.value.series! }, () => ({ repetitions: 0, weight: 0 }))
     }
+    this.exerciseModalForm.reset();
+    this.onSaveExercise(exercise);
   }
+
 }

@@ -16,20 +16,20 @@
             @if (isEditing) {
                 <form [formGroup]="getFormGroup(serie)" class="w-[90%] flex items-center justify-between mb-1 px-3 text-xl">
                   <div class="w-[134px] h-12 flex items-center">
-                    <label for="repetitions">Reps:</label>
+                    <label for="repetitions" class="font-bold">Reps:</label>
                     <input [formControlName]="'repetitions'" type="number" name="repetitions" class="p-2 w-20 text-right rounded-xl border-2 border-blue-200 outline-[#6423f7]" />
                   </div>
                   <span class="text-[#6423f7]">X</span>
                   <div class="w-[134px] h-12 flex items-center">
-                    <label for="weight">Peso:</label>
+                    <label for="weight" class="font-bold">Peso:</label>
                     <input [formControlName]="'weight'" type="number" name="weight" class="p-2 w-20 text-right rounded-xl border-2 border-blue-200 outline-[#6423f7]" />
                   </div>
                 </form>
               } @else {
                 <div class="w-[90%] flex items-center justify-between mb-1 px-3 h-12 text-xl">
-                  <div class="w-[134px] h-12 flex items-center justify-between">Reps: <span class="w-full text-right mr-[12px]">{{ serie.value.repetitions }}</span></div>
+                  <div class="w-[134px] h-12 flex items-center justify-between font-bold">Reps: <span class="w-full text-right mr-[8px] font-normal">{{ serie.value.repetitions }}</span></div>
                   <span class="text-[#6423f7]">X</span>
-                  <div class="w-[134px] h-12 flex items-center justify-between">Peso: <span class="w-full text-right mr-[13px]">{{ serie.value.weight }}</span></div>
+                  <div class="w-[134px] h-12 flex items-center justify-between font-bold">Peso: <span class="w-full text-right mr-[10px] font-normal">{{ serie.value.weight }}</span></div>
                 </div>
               }
           </div>
@@ -42,7 +42,7 @@
       <button (click)="onConfirmEditing()" class="col-span-2 row-span-2 m-3 rounded-3xl p-2 cursor-pointer bg-green-400 text-white text-2xl">Confirmar</button>
     } @else {
       <button (click)="onOpenExerciseModal()" class="col-span-1 rounded-3xl p-2 cursor-pointer bg-[rgb(159,116,255)] text-white text-2xl">Añadir</button>
-      <button (click)="onEditExercises()" class="col-span-1 rounded-3xl p-2 cursor-pointer bg-white border-2 border-[rgb(159,116,255)] text-[rgb(159,116,255)] text-2xl">Editar</button>
+      <button (click)="onEditExercises()" [class.opacity-30]="!formExercises.controls.length" class="col-span-1 rounded-3xl p-2 cursor-pointer bg-white border-2 border-[rgb(159,116,255)] text-[rgb(159,116,255)] text-2xl">Editar</button>
       <button (click)="onSaveTraining()" class="col-span-2 rounded-3xl p-2 cursor-pointer bg-green-400 text-white text-2xl">Guardar Entrenamiento</button>
     }
     </div>
@@ -50,16 +50,17 @@
 </div>
 
 <ng-template #exerciseModal>
-  <form [formGroup]="exerciseModalForm" (ngSubmit)="onSubmit()" class="rounded-sm p-4 flex flex-col gap-3 bg-blue-400" >
-      <div class="w-full">
-          <label for="exerciseName" class="mb-2">Nombre:</label>
-          <input [formControlName]="'name'" type="text" name="exerciseName" class="w-full" />
+  <form [formGroup]="exerciseModalForm" (ngSubmit)="onSubmit()" class="w-[90dvw] rounded-xl p-6 flex flex-col gap-3 bg-[#852ef6] shadow-[4px,4px,10px,black]" >
+      <div class="w-full mb-3">
+          <label for="exerciseName" class="block mb-2 text-2xl text-white">Nombre:</label>
+          <input [formControlName]="'name'" type="text" name="exerciseName" class="h-12 text-xl text-[#852ef6] font-bold w-full p-2 rounded-lg outline-2 outline-[#c191ff] border-2 border-[#6423f7]" />
       </div>
       <div class="w-full">
-          <label for="series" class="mb-2">Número de series:</label>
-          <input [formControlName]="'series'" type="number" name="series" class="w-full" />
+          <label for="series" class="block mb-2 text-2xl text-white">Número de series:</label>
+          <input [formControlName]="'series'" type="number" name="series" class="h-12 text-xl text-[#852ef6] font-bold w-full p-2 rounded-lg outline-2 outline-[#c191ff] border-2 border-[#6423f7]" />
       </div>
-      <button type="submit">Guardar</button>
+      <button type="submit" [class.opacity-50]="!exerciseModalForm.valid" class="w-full h-16 mt-12 rounded-lg bg-[#c57dff] text-white text-2xl">Guardar</button>
+
   </form>
 </ng-template>
 

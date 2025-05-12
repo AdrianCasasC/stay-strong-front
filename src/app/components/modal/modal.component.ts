@@ -1,5 +1,4 @@
-import { Component, computed, effect, inject, input, output, TemplateRef } from '@angular/core';
-import { Exercise } from '../../models/models';
+import { Component, inject, input, output, TemplateRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { NgTemplateOutlet } from '@angular/common';
