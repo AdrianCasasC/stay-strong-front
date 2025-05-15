@@ -5,7 +5,7 @@ import { getMonthNameByNumber, getNameOfWeek } from '../../utils/calendar';
 import { KeyValuePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CalendarService } from '../../services/calendar.service';
-import { DetailDay, DetailDayEntity } from '../../models/models';
+import { DetailDay, DetailDayEntity, Training } from '../../models/models';
 import { getDateString } from '../../../utils/utils';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { DetailsLayoutPageComponent } from '../details-layout-page/details-layout-page.component';
@@ -29,6 +29,7 @@ export class DetailPageComponent implements OnInit {
   /* Signals */
   dayDetail = this._calendarService.dayDetail;
   isLoading = this._calendarService.isLoading;
+  training = computed(() => this.dayDetail()?.training)
 
   /* Variables */
   year: number = 0;
@@ -99,7 +100,7 @@ export class DetailPageComponent implements OnInit {
         weight: this.detailForm.get('weight')?.value || false,
       },
       weightNumber: this.detailForm.get('weightNumber')?.value || null,
-      exercises: null
+      training: this.training() || null
     };
     if (this._dayDetailService.dayIdVal()) {
       updatedDay.id = this._dayDetailService.dayIdVal();

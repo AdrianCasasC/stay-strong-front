@@ -27,7 +27,7 @@ export interface DetailDay {
   date: Date | null;
   tasks: DayTask;
   weightNumber: number | null;
-  exercises: Exercise[] | null;
+  training: Training | null;
 }
 
 export interface DetailDayEntity {
@@ -35,7 +35,7 @@ export interface DetailDayEntity {
   date: string;
   tasks: DayTask;
   weightNumber: number | null;
-  exercises: Exercise[] | null;
+  training: Training | null;
 }
 
 export interface Calendar {
@@ -68,6 +68,11 @@ export interface Serie {
 export interface Exercise {
   name: string;
   series: Serie[];
+}
+
+export interface Training {
+  name: string;
+  exercises: Exercise[];
 }
 
 export type FooterTab = 'home' | 'list' | 'training';

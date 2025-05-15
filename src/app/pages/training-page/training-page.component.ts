@@ -1,35 +1,38 @@
 import { Component, computed, effect, inject, OnInit } from '@angular/core';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { Exercise, Serie } from '../../models/models';
-import { Router } from '@angular/router';
 import { TrainingService } from '../../services/training.service';
 import { DayDetailService } from '../../services/day-detail.service';
 import { CalendarService } from '../../services/calendar.service';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NotificationService } from '../../services/notification.service';
+import { LoaderComponent } from '../../components/loader/loader.component';
 
 @Component({
   selector: 'app-training-page',
   standalone: true,
-  imports: [ModalComponent, ReactiveFormsModule],
+  imports: [ModalComponent, ReactiveFormsModule, LoaderComponent, FormsModule],
   templateUrl: './training-page.component.html',
   styleUrl: './training-page.component.scss',
 })
 export class TrainingPageComponent {
   /* Injections */
-  private readonly _router = inject(Router);
   private readonly _dayDetailService = inject(DayDetailService);
   private readonly _trainingService = inject(TrainingService);
   private readonly _calendarService = inject(CalendarService);
+  private readonly _notificationService = inject(NotificationService);
   private readonly _fb = inject(FormBuilder);
 
   /* Signals */
   dayDetail = this._calendarService.dayDetail;
-  exercises = computed(() => this.dayDetail()?.exercises)
+  exercises = computed(() => this.dayDetail()?.training?.exercises)
   dayIdVal = this._dayDetailService.dayIdVal;
+  trainingLoading = this._trainingService.loading;
 
   /* Variables */
   selectedFile: File | null = null;
-  trainingName = 'Pierna';
+  trainingName = '';
+  trainingNameErr: string | null = null;
   showExerciseModal = false;
   isEditing = false;
 
@@ -50,6 +53,7 @@ export class TrainingPageComponent {
 
   /* Modal Form */
   exerciseModalForm = this._fb.group({
+    trainingName: ['', Validators.required],
     name: ['', Validators.required],
     series: [null, [Validators.required, Validators.min(1), Validators.max(10)]]
   })
@@ -91,6 +95,8 @@ export class TrainingPageComponent {
     effect(() => {
       this.fillForm(this.exercises() || []);
     });
+
+    effect(() => this.trainingName = this.dayDetail()?.training?.name || '')
   }
 
   onOpenExerciseModal(): void {
@@ -106,8 +112,26 @@ export class TrainingPageComponent {
     //if (!this.trainingForm.valid) return;
     const exercises: Exercise[] = this.trainingForm.value.exercises as Exercise[];
     this._trainingService
-      .updateDayExercise(this.dayIdVal(), exercises)
-      .subscribe();
+      .updateDayExercise(this.dayIdVal(), {
+        name: this.trainingName,
+        exercises
+      })
+      .subscribe({
+        next: () => {
+          this._notificationService.createNotification({
+            icon: 'success',
+            type: 'success',
+            message: '¡Entrenamiento guardado!'
+          });
+          //this._calendarService.getDayDetails(this._dayDetailService.dayIdVal());
+        },
+        error: () => this._notificationService.createNotification({
+          icon: 'error',
+          type: 'error',
+          message: 'Error al guardar entrenamiento',
+        }),
+        complete: () => this._trainingService.setLoading(false)
+      });
   }
 
   onCloseModal(): void {
@@ -121,12 +145,18 @@ export class TrainingPageComponent {
   }
 
   onConfirmEditing(): void {
+    if (!this.trainingName) {
+      this.trainingNameErr = 'Introduce el nombre del entrenamiento';
+      return;
+    }
+    this.trainingNameErr = null;
     this.isEditing = false;
   }
 
   /* Modal Methods */
   onSubmit(): void {
     if (!this.exerciseModalForm.valid) return;
+    this.trainingName = this.exerciseModalForm.value.trainingName!
     const exercise: Exercise = {
       name: this.exerciseModalForm.value.name!,
       series: Array.from({ length: this.exerciseModalForm.value.series! }, () => ({ repetitions: 0, weight: 0 }))

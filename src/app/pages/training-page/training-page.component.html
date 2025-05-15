@@ -2,7 +2,14 @@
 <div class="w-screen h-[calc(100dvh-64px)] flex flex-col justify-between p-6 text-center">
 
   @if (formExercises.controls.length) { 
-    <h1 class="text-3xl font-bold mb-6">Entrenamiento {{ trainingName }}</h1>
+    @if (isEditing) {
+      <input type="text" class="text-3xl text-center p-2 font-bold mb-6 rounded-xl border-2 border-blue-200 outline-[#6423f7]" [(ngModel)]="trainingName" />
+      @if (trainingNameErr) {
+        <small class="text-red-500">{{trainingNameErr}}</small>
+      }
+    } @else {
+      <h1 class="text-3xl font-bold mb-6">{{ trainingName }}</h1>
+    }
   } @else { 
     <h2 class="text-2xl font-bold text-center mb-3">Aun no tienes ejercicios ¡Añádelos ahora!</h2>
   }
@@ -43,7 +50,13 @@
     } @else {
       <button (click)="onOpenExerciseModal()" class="col-span-1 rounded-3xl p-2 cursor-pointer bg-[rgb(159,116,255)] text-white text-2xl">Añadir</button>
       <button (click)="onEditExercises()" [class.opacity-30]="!formExercises.controls.length" class="col-span-1 rounded-3xl p-2 cursor-pointer bg-white border-2 border-[rgb(159,116,255)] text-[rgb(159,116,255)] text-2xl">Editar</button>
-      <button (click)="onSaveTraining()" class="col-span-2 rounded-3xl p-2 cursor-pointer bg-green-400 text-white text-2xl">Guardar Entrenamiento</button>
+      <button (click)="onSaveTraining()" class="centered col-span-2 rounded-3xl p-2 cursor-pointer bg-green-400 text-white text-2xl">
+        @if (trainingLoading()) {
+          <app-loader [type]="'dots'" [color]="'white'"></app-loader>
+        }@else {
+          Guardar Entrenamiento
+        }
+      </button>
     }
     </div>
   
@@ -51,6 +64,12 @@
 
 <ng-template #exerciseModal>
   <form [formGroup]="exerciseModalForm" (ngSubmit)="onSubmit()" class="w-[90dvw] rounded-xl p-6 flex flex-col gap-3 bg-[#852ef6] shadow-[4px,4px,10px,black]" >
+      @if (!formExercises.controls.length) {
+        <div class="w-full mb-3">
+          <label for="trainingName" class="block mb-2 text-2xl text-white">Nombre del entreno:</label>
+          <input [formControlName]="'trainingName'" type="text" name="trainingName" class="h-12 text-xl text-[#852ef6] font-bold w-full p-2 rounded-lg outline-2 outline-[#c191ff] border-2 border-[#6423f7]" />
+      </div>
+      }
       <div class="w-full mb-3">
           <label for="exerciseName" class="block mb-2 text-2xl text-white">Nombre:</label>
           <input [formControlName]="'name'" type="text" name="exerciseName" class="h-12 text-xl text-[#852ef6] font-bold w-full p-2 rounded-lg outline-2 outline-[#c191ff] border-2 border-[#6423f7]" />
