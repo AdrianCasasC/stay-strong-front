@@ -4,7 +4,7 @@ import { Exercise, Serie } from '../../models/models';
 import { TrainingService } from '../../services/training.service';
 import { DayDetailService } from '../../services/day-detail.service';
 import { CalendarService } from '../../services/calendar.service';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, NgModel, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NotificationService } from '../../services/notification.service';
 import { LoaderComponent } from '../../components/loader/loader.component';
 
@@ -31,7 +31,7 @@ export class TrainingPageComponent {
 
   /* Variables */
   selectedFile: File | null = null;
-  trainingName = '';
+  trainingName: string | null = null;
   trainingNameErr: string | null = null;
   showExerciseModal = false;
   isEditing = false;
@@ -123,7 +123,7 @@ export class TrainingPageComponent {
     const exercises: Exercise[] = this.trainingForm.value.exercises as Exercise[];
     this._trainingService
       .updateDayExercise(this.dayIdVal(), {
-        name: this.trainingName,
+        name: this.trainingName || '',
         exercises
       })
       .subscribe({
@@ -161,6 +161,13 @@ export class TrainingPageComponent {
     }
     this.trainingNameErr = null;
     this.isEditing = false;
+  }
+
+  onRemove(form: FormGroup, isTraining?: boolean) {
+   if (isTraining) {
+    this.trainingName = null;
+   }
+   form.reset();
   }
 
   /* Modal Methods */

@@ -3,7 +3,10 @@
 
   @if (formExercises.controls.length) { 
     @if (isEditing) {
-      <input type="text" class="text-3xl text-center p-2 font-bold mb-6 rounded-xl border-2 border-blue-200 outline-[#6423f7]" [(ngModel)]="trainingName" />
+      <section class="w-full centered gap-2 mb-6">
+        <input type="text" class="w-full text-3xl text-center p-2 font-bold rounded-xl border-2 border-blue-200 outline-[#6423f7]" [(ngModel)]="trainingName" />
+        <div (click)="onRemove(trainingForm, true)" class="w-8 h-8 mr-3"><img class="w-full h-full" src="../../../assets/svgs/trash.svg" alt="trash-icon" /></div>
+      </section>
       @if (trainingNameErr) {
         <small class="text-red-500">{{trainingNameErr}}</small>
       }
@@ -14,13 +17,25 @@
     <h2 class="text-2xl font-bold text-center mb-3">Aun no tienes ejercicios ¡Añádelos ahora!</h2>
   }
     <form [formGroup]="trainingForm" class="w-[calc(100% + 48px)] h-full overflow-scroll -ml-6 -mr-6">
-      @for (exercise of formExercises.controls; track $index) {
+      @for (exercise of formExercises.controls; let i = $index; track i) {
         <form [formGroup]="getFormGroup(exercise)" class="mb-6">
-          <h2 class="w-full text-[28px] font-bold text-white mb-1 p-2 bg-gradient-to-r from-[#6423f7] to-[#c191ff] text-center">{{ exercise.value.name }}</h2>
-          @for (serie of getFormSeries(exercise).controls; let i = $index; track i) {
+          <div class="relative w-full text-[28px] font-bold text-white mb-1 p-2 bg-gradient-to-r from-[#6423f7] to-[#c191ff] centered">
+          @if (isEditing) {
+            <input type="text" [formControlName]="'name'" class="bg-transparent text-center border-white border-2 rounded-xl w-[80%]" />
+            <div (click)="onRemove(getFormGroup(exercise))" class="w-8 h-8 absolute right-3 top-1/2 -translate-y-1/2">
+              <img class="w-full h-full" src="../../../assets/svgs/trash.svg" alt="trash-icon" />
+            </div>
+          }@else {
+            <h2 class="w-full text-center">{{ exercise.value.name }}</h2>
+          }
+        </div>
+          @for (serie of getFormSeries(exercise).controls; let j = $index; track j) {
           <div class="mb-3 flex flex-col items-center">
-            <span class="block w-full px-3 pb-1 text-center text-[22px] mb-2 border-b-2 font-bold border-[#6423f7]">Serie {{ i + 1 }}</span>
             @if (isEditing) {
+                <div class="w-full centered px-3 pb-1 text-center text-[22px] mb-2 border-b-2 font-bold border-[#6423f7]">
+                  <span>Serie {{ j + 1 }}</span>
+                  <span (click)="onRemove(getFormGroup(serie))" class="block ml-3 w-6 h-6"><img src="../../../assets/svgs/trash.svg" alt="trash-icon" class="w-full h-full" /></span>
+                </div>
                 <form [formGroup]="getFormGroup(serie)" class="w-[90%] flex items-center justify-between mb-1 px-3 text-xl">
                   <div class="w-[134px] h-12 flex items-center">
                     <label for="repetitions" class="font-bold">Reps:</label>
@@ -33,6 +48,7 @@
                   </div>
                 </form>
               } @else {
+                <span class="block w-full px-3 pb-1 text-center text-[22px] mb-2 border-b-2 font-bold border-[#6423f7]">Serie {{ j + 1 }}</span>
                 <div class="w-[90%] flex items-center justify-between mb-1 px-3 h-12 text-xl">
                   <div class="w-[134px] h-12 flex items-center justify-between font-bold">Reps: <span class="w-full text-right mr-[8px] font-normal">{{ serie.value.repetitions }}</span></div>
                   <span class="text-[#6423f7]">X</span>
