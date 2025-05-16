@@ -53,8 +53,8 @@ export class TrainingPageComponent {
 
   /* Modal Form */
   exerciseModalForm = this._fb.group({
-    trainingName: ['', Validators.required],
-    name: ['', Validators.required],
+    trainingName: ['', [Validators.required]],
+    name: ['', [Validators.required]],
     series: [null, [Validators.required, Validators.min(1), Validators.max(10)]]
   })
   
@@ -91,12 +91,22 @@ export class TrainingPageComponent {
     });
   }
 
+  private clearTrainingNameValidators(): void {
+    const trainingNameControl = this.exerciseModalForm.get('trainingName')
+    trainingNameControl?.clearValidators();
+    trainingNameControl?.updateValueAndValidity();
+  }
+
   constructor() {
     effect(() => {
       this.fillForm(this.exercises() || []);
     });
 
-    effect(() => this.trainingName = this.dayDetail()?.training?.name || '')
+    effect(() => {
+        this.trainingName = this.dayDetail()?.training?.name || '';
+        this.clearTrainingNameValidators();
+      }
+    )
   }
 
   onOpenExerciseModal(): void {
@@ -156,11 +166,14 @@ export class TrainingPageComponent {
   /* Modal Methods */
   onSubmit(): void {
     if (!this.exerciseModalForm.valid) return;
-    this.trainingName = this.exerciseModalForm.value.trainingName!
+    if (this.exerciseModalForm.value.trainingName) {
+      this.trainingName = this.exerciseModalForm.value.trainingName
+    }
     const exercise: Exercise = {
       name: this.exerciseModalForm.value.name!,
       series: Array.from({ length: this.exerciseModalForm.value.series! }, () => ({ repetitions: 0, weight: 0 }))
     }
+    this.clearTrainingNameValidators();
     this.exerciseModalForm.reset();
     this.onSaveExercise(exercise);
   }

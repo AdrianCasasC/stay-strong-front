@@ -10,7 +10,7 @@ import { CalendarService } from '../../services/calendar.service';
   templateUrl: './graph.component.html',
   styleUrl: './graph.component.scss',
 })
-export class GraphComponent implements OnInit, AfterViewInit {
+export class GraphComponent implements OnInit {
   /* Injections */
   private readonly _calendarService = inject(CalendarService);
 
@@ -85,10 +85,6 @@ export class GraphComponent implements OnInit, AfterViewInit {
 
   constructor() {
     effect(() => this.initGraph());
-  }
-
-  ngAfterViewInit(): void {
-    throw new Error('Method not implemented.');
   }
 
   ngOnInit(): void {
